@@ -104,7 +104,8 @@ def apply(state, n, head):
     findings, counts = ledger["findings"], {}
     whole = state / f"verified-{n}.json"
     shards = len(list((state / f"round-{n}").glob("candidates-*.json")))
-    files = [whole] if whole.exists() else [state / f"verified-{n}-{k}.json" for k in range(1, shards + 1)]
+    # `candidates` clears old shards, so their presence says how the latest round was split.
+    files = [state / f"verified-{n}-{k}.json" for k in range(1, shards + 1)] if shards else [whole]
     missing = [f.name for f in files if not f.exists()] or ([] if files else [whole.name])
     if missing:
         sys.exit("missing " + ", ".join(missing))

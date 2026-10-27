@@ -1,6 +1,6 @@
 # Verifier brief
 
-Fresh verifiers sit between the lanes and the fixer, one per shard of the round's candidates,, so triage never runs in the author's large session. Send it the round's packets first, then this brief. Use the `verifier` agent when one is defined, otherwise a general subagent.
+Fresh verifiers sit between the lanes and the fixer, one per shard of the round's candidates, so triage never runs in the author's large session. Send each one the round's packets first, then this brief. Use the `verifier` agent when one is defined, otherwise a general subagent.
 
 ---
 
