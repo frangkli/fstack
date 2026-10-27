@@ -1,0 +1,8 @@
+[00;39mrepos:
+[00;39m  - repo: local
+[00;39m    hooks:
+[00;39m      - id: betterleaks
+[00;39m        name: betterleaks
+[00;39m        entry: betterleaks git --staged --redact
+[00;39m        language: system
+[00;39m        pass_filenames: false

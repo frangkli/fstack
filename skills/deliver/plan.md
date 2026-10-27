@@ -35,7 +35,7 @@ Each decision: the question, the options with what happens under each, and the r
 
 Sent in chat after the plan is published:
 
-- The file path and its docs hub link.
+- The file path and its docs hub link, if there is one.
 - The recommendation in two or three sentences.
 - The decisions, numbered, each with its default.
 - What approval starts: build, review, PR, merge if decided, deployment and production acceptance, without further questions unless a reopen trigger fires.

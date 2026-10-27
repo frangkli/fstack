@@ -34,7 +34,7 @@ Skills with their own report format (`adversarial-review`, `improve`) follow it;
 After drafting, and before the shared AI-tell pass, run the STE-flavoured mode of the [`asd-ste100`](../asd-ste100/SKILL.md) skill over the draft: its structural rules in full, its lexical rules as advice. Start with its linter as the mechanical first check, on the file or on the text through stdin:
 
 ```bash
-python3 ~/.agents/skills/asd-ste100/scripts/ste-lint.py <file>
+python3 <this skill's folder>/../asd-ste100/scripts/ste-lint.py <file>
 ```
 
 Fix each hard finding, or keep the sentence when the rewrite would drop a fact, a condition or a hedge. Read each advisory finding (passive voice, compound tense) and change the sentence only where the actor or the timing gets clearer.

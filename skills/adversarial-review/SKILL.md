@@ -20,7 +20,7 @@ Several fresh reviewers each attack one angle of the artifact, and a fresh verif
 - **Packet.** In round 1, build one per group, and give every lane of a group the same bytes. The high-risk packet shows each hunk's enclosing function; the other takes `--lines 10`, which is smaller when functions are long. A confirming round builds one packet of the fix diff (step 2):
 
   ```bash
-  python3 ~/.agents/skills/adversarial-review/scripts/packet.py --base <base> --head <head> --scope <the group's files> [--lines 10] \
+  python3 <this skill's folder>/scripts/packet.py --base <base> --head <head> --scope <the group's files> [--lines 10] \
     --spec <spec file>#<section the ticket names> --ledger <state>/ledger.json --out <state>/round-<n>/packet[-risky|-rest].md
   ```
 
@@ -53,7 +53,7 @@ After the lanes return (not before), read the review bots' and humans' comments 
 
 ## 4. Verify
 
-Merge the round's candidates (`python3 ~/.agents/skills/improve/scripts/ledger.py candidates <state> 1`), then send the round's packets, the lane results and `round-1/candidates.json` to one fresh verifier under [verifier-brief.md](verifier-brief.md). It drops known findings, confirms or refutes each candidate, and writes `verified-1.json`. Record it with `ledger.py apply <state> 1 <head>`. You read its summary, not the lanes' full output. For a plan or spec, the verifier checks each claim against the plan and the code that exists today.
+Merge the round's candidates (`python3 <this skill's folder>/../improve/scripts/ledger.py candidates <state> 1`), then send the round's packets, the lane results and `round-1/candidates.json` to one fresh verifier under [verifier-brief.md](verifier-brief.md). It drops known findings, confirms or refutes each candidate, and writes `verified-1.json`. Record it with `ledger.py apply <state> 1 <head>`. You read its summary, not the lanes' full output. For a plan or spec, the verifier checks each claim against the plan and the code that exists today.
 
 Done when every candidate is confirmed (with a trigger and evidence), refuted (with the evidence) or unverifiable (with what blocked it).
 

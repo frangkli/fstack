@@ -7,7 +7,7 @@ description: 'Writing prose for human readers. Load it before drafting, editing 
 
 One skill for prose that people read. Pick the mode by who reads the text and what they do after reading it, read that mode's file, and apply the shared rules below to every mode.
 
-Before returning any text, read the AI-tell catalogue in [`../humanizer/SKILL.md`](../humanizer/SKILL.md) (`~/.agents/skills/humanizer/SKILL.md`) and check both the text and your chat reply around it against its sections. For docs, technical and marketing text, read the catalogue by itself and in full, with the Read tool or by loading the `humanizer` skill: never in one command with other files, never through `head` or a grep of its headings.
+Before returning any text, read the AI-tell catalogue in [`../humanizer/SKILL.md`](../humanizer/SKILL.md) (`<this skill's folder>/../humanizer/SKILL.md`) and check both the text and your chat reply around it against its sections. For docs, technical and marketing text, read the catalogue by itself and in full, with the Read tool or by loading the `humanizer` skill: never in one command with other files, never through `head` or a grep of its headings.
 
 These five tells most often survive a rewrite:
 
