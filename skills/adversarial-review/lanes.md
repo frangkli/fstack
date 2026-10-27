@@ -45,7 +45,7 @@ Listing callers is quick; the job is the breakage a search won't show. Find the 
 
 ### `ocr`
 
-Run open-code-review on the same base and head. ocr takes one background file, and it warns once that file passes about 2,000 characters, so keep it short. Write the contract, the three wording rules from [../improve/ledger.md](../improve/ledger.md), the repo's `REVIEW_RULES.md` Known non-issues when it has them, and the known list (`python3 ~/.agents/skills/improve/scripts/ledger.py known <state> <characters left>`) to `<state>/round-<n>/ocr-background.md`, and pass that:
+Run open-code-review on the same base and head. ocr takes one background file, and it warns once that file passes about 2,000 characters, so keep it short. Write the contract, the three wording rules from [../improve/ledger.md](../improve/ledger.md), the repo's `REVIEW_RULES.md` Known non-issues when it has them, and the known list (`python3 <this skill's folder>/../improve/scripts/ledger.py known <state> <characters left>`) to `<state>/round-<n>/ocr-background.md`, and pass that:
 
 ```bash
 timeout 900 ocr review --from <base> --to <head> --background-file <state>/round-<n>/ocr-background.md --format json --audience agent > <state>/round-<n>/raw/ocr.json

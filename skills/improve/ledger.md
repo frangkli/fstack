@@ -45,7 +45,7 @@ One folder per ticket, outside the worktree: the run's `state/<ticket>/` when an
 }
 ```
 
-**Commands.** `python3 ~/.agents/skills/improve/scripts/ledger.py` with `init`, `candidates`, `apply`, `verdict`, `outcome`, `known` and `id`; run it with no arguments for usage. It writes `base`, `scope`, `rounds`, `findings` and `outcome`; you add the contract, `guarded` and `decisions`.
+**Commands.** `python3 <this skill's folder>/scripts/ledger.py` with `init`, `candidates`, `apply`, `verdict`, `outcome`, `known` and `id`; run it with no arguments for usage. It writes `base`, `scope`, `rounds`, `findings` and `outcome`; you add the contract, `guarded` and `decisions`.
 
 **Ids.** A finding's id is a short hash of its repo-relative path and normalised title, with no line number, so it survives code moving (`ledger.py id <path> "<title>"`). A report always shows the title, with the id beside it.
 

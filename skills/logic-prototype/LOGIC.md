@@ -38,7 +38,7 @@ Run every walkthrough before handing over: load the page in a headless browser, 
 
 ## 5. Hand it over
 
-Give the user the file path and its docs hub link. The interesting moments are "wait, that shouldn't be possible" and "I assumed X would be different": those are bugs in the idea, which is the point. Add actions or scenarios when they ask.
+Give the user the file path and its docs hub link, if there is one. The interesting moments are "wait, that shouldn't be possible" and "I assumed X would be different": those are bugs in the idea, which is the point. Add actions or scenarios when they ask.
 
 If no one will drive it (an unattended run), the verdict is yours: report what each scenario showed and log the verdict as a ruling.
 

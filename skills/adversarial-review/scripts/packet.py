@@ -95,7 +95,7 @@ def main():
 
     rules = [f"- {f}" for f in RULE_FILES if (root / f).exists()]
     for lang in sorted({LANGUAGES[Path(f).suffix] for f in files if Path(f).suffix in LANGUAGES}):
-        ref = Path.home() / ".agents/skills" / lang / "references/review.md"
+        ref = Path(__file__).resolve().parents[2] / lang / "references/review.md"  # a sibling skill
         if ref.exists():
             rules.append(f"- {ref} ({lang})")
     parts.append("## Rule files to read\n\n" + ("\n".join(rules) or "none"))

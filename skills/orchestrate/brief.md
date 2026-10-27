@@ -2,7 +2,7 @@
 
 A worker can't ask you a question, so the brief is all it knows. Every spawn, fix rounds included, carries every section below with something in it; write "none" with the reason where a section doesn't apply. Fit the length to the unit: a one-command unit gets a line per section.
 
-A section you can't fill means the unit isn't scoped yet: rescope it, merge it into another unit, or do it yourself. Before every spawn, run `python3 ~/.agents/skills/orchestrate/scripts/brief_check.py <absolute path of the brief>`. It fails on a missing or empty section, a leftover `<placeholder>`, or missing closing lines; never spawn on a failure. It reads the labels below, upper case at the start of a line, and treats anything inside a code fence after the first label as quoted, so paste reports in a fence.
+A section you can't fill means the unit isn't scoped yet: rescope it, merge it into another unit, or do it yourself. Before every spawn, run `python3 <this skill's folder>/scripts/brief_check.py <absolute path of the brief>`. It fails on a missing or empty section, a leftover `<placeholder>`, or missing closing lines; never spawn on a failure. It reads the labels below, upper case at the start of a line, and treats anything inside a code fence after the first label as quoted, so paste reports in a fence.
 
 ```text
 GOAL          One sentence: the outcome, written for someone with no access to this chat.

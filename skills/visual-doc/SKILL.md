@@ -98,7 +98,7 @@ Write HTML with this skill for anything the owner reviews or decides on: plans, 
    - research reports and experiment results in `docs/research/`;
    - specs where `to-spec` puts them.
 
-   If the repo documents its own layout for these folders (AGENTS.md, a README inside them), follow that. If its AGENTS.md says "Docs stay local: write them to `docs/local/` in the main checkout.", save them flat in `~/workspace/<repo>/docs/local/` and never commit them. A doc about no repo goes flat in `~/workspace/notes/`, never in a GitHub repo. In both flat folders the kind comes from `doc-kind` or `kind:`.
+   If the repo documents its own layout for these folders (AGENTS.md, a README inside them), follow that. If its AGENTS.md says "Docs stay local: write them to `docs/local/` in the main checkout.", save them flat in the main checkout's `docs/local/` and never commit them. A doc about no repo goes where AGENTS.md says, never in a GitHub repo. In both flat folders the kind comes from `doc-kind` or `kind:`.
 2. Commit the page with the work it explains, or on its own when the page is the deliverable. It merges to main with the work. When revising, overwrite the same file and let git keep the history: no `-v2` or dated duplicates. The only copy never lives in `.context/`, `/tmp` or an environment-provided visualization directory. Evidence captures that no page links to stay in `.context/`.
 3. A page with images, evidence files or sibling pages becomes a directory with `index.html`. Use relative links, never `file://` or preview URLs.
 
@@ -110,4 +110,4 @@ Write HTML with this skill for anything the owner reviews or decides on: plans, 
 
 ## Deliver
 
-Return the finding or recommendation, the repo path of the page, and its docs hub link. End with the decisions the reader needs to make, each with a recommended default, or say that nothing needs them.
+Return the finding or recommendation, the repo path of the page, and its docs hub link if there is one. End with the decisions the reader needs to make, each with a recommended default, or say that nothing needs them.
