@@ -70,7 +70,7 @@ git clone https://github.com/frangkli/fstack && cp fstack/agents/*.md ~/.claude/
 - An authenticated [GitHub CLI](https://cli.github.com) and `python3`.
 - `writing` and `writing-for-agents` read two third-party skills: `npx skills add blader/humanizer danyuchn/asd-ste100-skill --global`.
 - Optional, used when present: [open-code-review](https://github.com/alibaba/open-code-review) and Codex as extra review lanes, [impeccable](https://github.com/pbakaus/impeccable) for `design-rules`, [AgentsView](https://github.com/kenn-io/agentsview) and [atuin](https://atuin.sh) for `tune-up`, and [T3 Code](https://github.com/pingdotgg/t3code) for delegation and PR watching.
-- Some skills link to a docs hub, a small server in my [dotfiles](https://github.com/frangkli/dotfiles) that serves every worktree's `docs/` live. Without one, they give the file path instead.
+- Some skills link to [Lectern](https://github.com/frangkli/lectern), which serves every worktree's `docs/` live. Without it, they give the file path instead.
 
 ## Make them yours
 

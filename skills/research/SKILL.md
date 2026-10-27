@@ -62,7 +62,7 @@ Done when the headers alone, read top to bottom, answer every question, and ever
 
 If the doc runs past about 200 lines, give it alone to a fresh subagent and ask which questions it would still have. Answer them in the doc.
 
-The docs hub shows every worktree's `docs/research/` live from disk, so writing the file publishes it. Commit it on the current branch when the task is producing commits.
+Lectern shows every worktree's `docs/research/` live from disk, so writing the file publishes it. Commit it on the current branch when the task is producing commits.
 
 ## 7. Report
 
