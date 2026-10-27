@@ -12,7 +12,7 @@
    --bad red = risk; --info blue = neutral emphasis. Each has -soft (fill) and -line (border).
    Charts that tell categories apart take --cat-1 to --cat-8 in order; the order is checked for
    colour-blind separation, so don't reorder it. --accent is --good, for pages written against older kits.
-   Type: Hanken Grotesk and Geist Mono when the page has them (the docs hub loads them), else the system faces.
+   Type: Hanken Grotesk and Geist Mono when the page has them (Lectern loads them), else the system faces.
    Body 16/25.6 at weight 420, h1 30, h2 20, h3 17, all in one 872px column; headings and the page's facts in black,
    prose in dark grey, rules as hairlines. Charts fill a mark with a tint of its colour and outline it
    in the colour itself.
@@ -461,11 +461,11 @@ pre.mermaid.wide svg { max-width: none; }
         select(0);
       }
 
-      // Theme: system, light or dark, saved in this browser. The docs hub runs this same code and
+      // Theme: system, light or dark, saved in this browser. Lectern runs this same code and
       // sets the theme of the document in its frame; a document opened on its own gets the control.
       {
         const root = document.documentElement;
-        // A page in a frame drops its own kind and date line; the docs hub marks its pages with data-hub instead.
+        // A page in a frame drops its own kind and date line; Lectern marks its pages with data-lectern instead.
         if (window !== top) root.dataset.framed = "";
         const saved = () => {
           try {
@@ -712,7 +712,7 @@ pre.mermaid.wide svg { max-width: none; }
           });
           script.addEventListener("load", () => {
             render();
-            // Redraw when the theme changes, from the control, the hub or the system.
+            // Redraw when the theme changes, from the control, Lectern or the system.
             new MutationObserver(render).observe(document.documentElement, { attributeFilter: ["data-theme"] });
             matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
             addEventListener("resize", fit);

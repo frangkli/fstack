@@ -12,7 +12,7 @@ Write one HTML page that explains a design, result or tradeoff so the reader can
 Load the `writing` skill and follow its technical mode, including its AI-tell pass. On top of it:
 
 - The first screen holds the recommendation or result, why it matters, and what the evidence supports. Open with the lead block (`.callout.recommend`): a few short paragraphs, each starting with a bold lead-in (**What we build.**, **Effort.**).
-- One `h1` (the title). One `h2` per section, phrased as the claim or question it answers. Number the `h2`s when the text refers to sections by number. `h3` only inside a long section. The docs hub builds its contents list from `h2` and `h3`.
+- One `h1` (the title). One `h2` per section, phrased as the claim or question it answers. Number the `h2`s when the text refers to sections by number. `h3` only inside a long section. Lectern builds its contents list from `h2` and `h3`.
 - Paragraphs of at most three sentences, one idea each. Define a term at first use. Name what each part does and who owns it, never a vague box such as "processing layer".
 - Walk one concrete request through the parts, with real values (path, ID, payload), in a `<details>` under the structure figure. Show a failure or retry only when it explains the design.
 - For options, state what would change the recommendation.
@@ -91,7 +91,7 @@ Use semantic HTML, labelled and keyboard-operable controls, and visible focus. K
 
 ## Save
 
-Write HTML with this skill for anything the owner reviews or decides on: plans, explainers, tradeoffs, experiment results and audits. Write Markdown for what later agent steps read: research inputs, specs and architect designs. The docs hub renders both the same way. A Markdown document declares its kind in front matter (`kind: experiment`), and its ```` ```mermaid ```` fences become diagrams in the hub and on GitHub.
+Write HTML with this skill for anything the owner reviews or decides on: plans, explainers, tradeoffs, experiment results and audits. Write Markdown for what later agent steps read: research inputs, specs and architect designs. Lectern renders both the same way. A Markdown document declares its kind in front matter (`kind: experiment`), and its ```` ```mermaid ```` fences become diagrams in the hub and on GitHub.
 
 1. Save in the worktree you're working in, named `YYYY-MM-DD-<slug>` by the day it was first written:
    - plans, explainers and tradeoffs in `docs/plans/`;
@@ -105,9 +105,9 @@ Write HTML with this skill for anything the owner reviews or decides on: plans, 
 ## Check before you finish
 
 1. **Fact-check the page.** List every claim a reader could check: paths, names, behaviour, data flow, commands, APIs, dependencies, tests, numbers, dates and git history. Check each against its source: the code, `git show`, a command you run now, or the cited document. Mark each verified, corrected, unsupported or unverifiable. Fix errors in place, figures included. Remove an unsupported claim or label it as inferred or proposed. Every source link must resolve for the reader: link code at a commit the remote already has, or cite `path:line` as text. Done when every claim has a mark; give the counts in a closing `<details>` note, with what you corrected.
-2. **Look at it.** Open the page's docs hub link with the browser tool; the hub serves every worktree's `docs/` and `internal/docs/` live, so the saved file is already there. AGENTS.md names the hub and its link form. Without a hub, open `file://<absolute path>`. Don't start a server. Check at 1280 px and 390 px wide in light and dark, use every control, and look for clipping, unreadable labels, misleading scales and broken sources. Every Mermaid diagram must render: kit-js shows a failed one as its source under a red "This diagram didn't render" note, and the page must contain no "Syntax error" and no `aria-roledescription="error"`. Done when both widths and both themes render cleanly and every control works; if no browser tool is available, say that only source checks ran.
+2. **Look at it.** Open the page's Lectern link with the browser tool; Lectern serves every worktree's `docs/` and `internal/docs/` live, so the saved file is already there. AGENTS.md names Lectern and its link form. Without it, open `file://<absolute path>`. Don't start a server. Check at 1280 px and 390 px wide in light and dark, use every control, and look for clipping, unreadable labels, misleading scales and broken sources. Every Mermaid diagram must render: kit-js shows a failed one as its source under a red "This diagram didn't render" note, and the page must contain no "Syntax error" and no `aria-roledescription="error"`. Done when both widths and both themes render cleanly and every control works; if no browser tool is available, say that only source checks ran.
 3. **Inspect the file** for leftover sample content, placeholders, external dependencies and private data.
 
 ## Deliver
 
-Return the finding or recommendation, the repo path of the page, and its docs hub link if there is one. End with the decisions the reader needs to make, each with a recommended default, or say that nothing needs them.
+Return the finding or recommendation, the repo path of the page, and its Lectern link if there is one. End with the decisions the reader needs to make, each with a recommended default, or say that nothing needs them.
