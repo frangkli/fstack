@@ -85,7 +85,7 @@ Formatting serves clarity and consistency. Break a rule when the figure reads be
 - Green means recommended, chosen, new or good. Ochre means a decision for the reader or a draft. Red means a risk or regression. Everything else starts neutral. A chart that must tell categories apart uses the kit's categorical palette, which kit-js also gives Mermaid's pie, timeline, sankey and `xychart`. Pair each colour with a word.
 - Bold marks a lead-in, or one key number or term in a paragraph.
 - Use the kit's type scale, without font sizes in page CSS. Write − for minus, an en dash for ranges, × for multipliers, and a no-break space between a number and its unit.
-- No external fonts, scripts, CDNs or frameworks, with one exception: kit-js loads the pinned Mermaid build from jsDelivr, with an integrity hash, when the page has a diagram. Kit-js also adds the light, dark and system theme control, so add no other.
+- No external fonts, scripts, CDNs or frameworks, with two exceptions: kit-js loads pinned builds of Mermaid and highlight.js from jsDelivr, with integrity hashes, when the page has a diagram or a code block that names its language. Write code as `<pre><code class="language-ts">`, so it is highlighted; a file tree or plain output needs no class. Kit-js also adds the light, dark and system theme control, so add no other.
 
 Use semantic HTML, labelled and keyboard-operable controls, and visible focus. Keep the content readable without JavaScript and at phone width.
 
