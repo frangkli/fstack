@@ -37,7 +37,7 @@ Give each sketcher one. Pick two or three that pull this problem in different di
 >
 > Put the sketch where the code would live, and write the rationale next to it from [rationale.md](rationale.md), Usage section first. Its prose follows these rules:
 >
-> - Open with the conclusion; every later sentence adds a fact the reader lacks.
+> - Open with the conclusion. Name each thing by its exact technical term, define a term the reader may not know where it first appears, and use the term after that, never a paraphrase. Keep the sentences plain and the reasoning between facts in full sentences.
 > - Mark how you know each claim: measured (number, unit, command), inferred (cite `path:line`, say what would confirm it) or proposed (what it costs and gives up).
 > - Figures, not adjectives ("340 ms to 45 ms", "3 of 120 tests"); name the real symbol, file or command; a fact you lack is a visible `[confirm: …]`, never a guess.
 > - End with the open decisions, each with a recommended default, or "Nothing needs you".

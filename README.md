@@ -46,7 +46,7 @@ git clone https://github.com/frangkli/fstack && cp fstack/agents/*.md ~/.claude/
 
 | Skill | What it does |
 |---|---|
-| `visual-doc` | Self-contained HTML plans, explainers and reports that help a reader decide. |
+| `visual-doc` | HTML plans, explainers, research and reports that help a reader decide, styled by a shared kit. |
 | `show-me` | Explains the current topic with diagrams and small HTML pages. |
 | `writing` | Prose for people: messages, docs, specs and announcements, with an AI-tell pass. |
 | `writing-for-agents` | Skills, AGENTS.md, subagent briefs and prompts. |

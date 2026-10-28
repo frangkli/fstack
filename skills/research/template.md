@@ -25,7 +25,7 @@ status: complete | open-questions
 
 ### 1. <A sentence that states what is true, e.g. "Workers restore pending jobs before accepting new work">
 
-<The finding first, then how it works, with `path:line` citations. Add a table, a sequence or flow diagram, a call tree or signatures beside the prose they support.>
+<The finding first, then how it works, with `path:line` citations. Put the figure the content needs beside the prose it supports, picked from `visual-doc`'s Visuals table: a chart for measured numbers, a diagram for a flow or sequence, a call tree or signatures for code. A table only for exact values a reader looks up.>
 
 **Tests:** <where the tests for this are, what kind, the fixtures and helpers they use; or "none found" and where you looked.>
 

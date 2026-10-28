@@ -56,7 +56,7 @@ Unmask the letters and write the verdict yourself, from the answers and reviews:
 - **Recommendation:** one option, with its reasons. It may overrule the majority when the minority's reasoning is stronger; say why.
 - **Next step:** one concrete action, and the result that shows it is done.
 
-Write it as Markdown to `docs/research/YYYY-MM-DD-<slug>-council.md`, or where AGENTS.md says research goes, per the `writing` skill's technical mode ([technical.md](../writing/technical.md)). Open with the recommendation, then the question and the commit SHA, then the five sections above, then any gaps. Append the framed question, the five answers and the five reviews with the letter map, so a later council on the same question can see what changed.
+Write it to `docs/research/YYYY-MM-DD-<slug>-council.html` with `visual-doc` (kind `tradeoff`), or where AGENTS.md says research goes, per the `writing` skill's technical mode ([technical.md](../writing/technical.md)). Open with the recommendation, then the question and the commit SHA, then the five sections above, then any gaps. Append the framed question, the five answers and the five reviews with the letter map in closed `<details>`, so a later council on the same question can see what changed.
 
 Done when every clash names both sides and their framings, the recommendation is one option, and the next step is one action.
 
