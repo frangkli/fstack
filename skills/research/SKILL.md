@@ -49,7 +49,7 @@ Done when every question has an answer whose citations you opened yourself, or i
 
 ## 5. Write the doc
 
-Write `docs/research/YYYY-MM-DD-<slug>.md` in the current worktree from [template.md](template.md). The doc is Markdown only, since later steps (`to-spec`, `architect`) read it. Add an HTML companion with `visual-doc` only when the user asks for one. Write the prose per the `writing` skill's technical mode ([technical.md](../writing/technical.md)), with the template and the rules below in place of its report contract and its HTML hand-off.
+Write `docs/research/YYYY-MM-DD-<slug>.html` in the current worktree with `visual-doc` (kind `research`), its sections from [template.md](template.md) and the template's front-matter fields in the page header. Write the prose per the `writing` skill's technical mode ([technical.md](../writing/technical.md)), with the template and the rules below in place of its report contract.
 
 - **Headers state findings.** "Workers restore pending jobs before accepting new work", not "Worker startup" or "How do workers restart?". Lead each section with the finding, then the explanation, citations and any diagram.
 - Organise by concept, and say what each part does before saying where it lives.
@@ -60,7 +60,7 @@ Done when the headers alone, read top to bottom, answer every question, and ever
 
 ## 6. Reader test and publish
 
-If the doc runs past about 200 lines, give it alone to a fresh subagent and ask which questions it would still have. Answer them in the doc.
+Run `visual-doc`'s checks, its reader test included.
 
 Lectern shows every worktree's `docs/research/` live from disk, so writing the file publishes it. Commit it on the current branch when the task is producing commits.
 

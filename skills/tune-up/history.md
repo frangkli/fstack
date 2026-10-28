@@ -4,7 +4,7 @@ Across recent sessions: where did agents waste turns or fail repeatedly, which s
 
 **Scope.** From a project checkout, audit that project's sessions. With `global`, audit every project and target the global instructions, skills and harness config. The window defaults to the time since the last history report, else 14 days. Under ~20 interactive sessions in the window, report the count and stop.
 
-**Privacy.** Reports quote sessions, so they go to the private repo AGENTS.md names for them (ask the owner when it names none), as `docs/research/<YYYY-MM-DD>-history-audit.md` with a `.json` sidecar, for project runs too. A PR to a public repo carries the generic change and its reason, with no project names, paths, quotes or secrets.
+**Privacy.** Reports quote sessions, so they go to the private repo AGENTS.md names for them (ask the owner when it names none), as `docs/research/<YYYY-MM-DD>-history-audit.html`, written with `visual-doc`, with a `.json` sidecar, for project runs too. A PR to a public repo carries the generic change and its reason, with no project names, paths, quotes or secrets.
 
 ## Steps
 
