@@ -23,7 +23,7 @@ Across recent sessions: where did agents waste turns or fail repeatedly, which s
 |---|---|---|
 | Repeated failures | `tool_failure_signal_count`, `consecutive_failure_max`, failed tool results grouped by error text | One error class in two or more sessions |
 | Wasted turns | `tool_retry_count`, `edit_churn_count`, `runaway_tool_loop_count`, `mid_task_compaction_count`, one file read three or more times (re-reads after a compaction excluded) | A cause repeats: a missing pointer, a noisy command, a broken script routed around |
-| User corrections | Later user turns that redirect the agent, `duplicate_prompt_count` | The owner repeats an instruction a check, skill or line could carry |
+| User corrections | Later user turns that redirect the agent or ask what a reply meant, `/wait-what` uses, `duplicate_prompt_count` | The owner repeats an instruction a check, skill or line could carry, or asks what replies meant in two or more sessions |
 | Slow checks | atuin median duration per command; full-check runs per session | A `GATES.md` command runs far slower than listed, or sessions run the full check between steps |
 | Missed skills | Claude `Skill` calls; Codex reads of a `SKILL.md` through the shell | A model-invoked skill missed matching tasks in two or more sessions |
 | Cost outliers | `total_output_tokens`, `agentsview usage daily` | One task class costs several times the median with no better outcome |
