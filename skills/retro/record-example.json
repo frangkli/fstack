@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_kind": "workflow-retro",
+  "run": {
+    "id": null,
+    "project": null,
+    "start": null,
+    "delivery_endpoint": null,
+    "accounting_end": null,
+    "follow_up_cutoff": null,
+    "timezone": null,
+    "done_predicate": null
+  },
+  "revisions": [],
+  "membership": {
+    "included": [],
+    "excluded": [],
+    "missing": []
+  },
+  "sources": [],
+  "coverage_audit": [],
+  "measurements": [
+    {
+      "id": "elapsed_delivery",
+      "value": null,
+      "unit": "seconds",
+      "definition": "delivery_endpoint minus start",
+      "numerator": null,
+      "denominator": null,
+      "sample_size": null,
+      "source_ids": [],
+      "coverage": null,
+      "gap": "Illustrative empty record; no run has been measured."
+    }
+  ],
+  "findings": [],
+  "proposals": [],
+  "publication": {
+    "state": "draft",
+    "commit": null,
+    "url": null
+  },
+  "corrections": [],
+  "limitations": ["Illustrative structure only; replace null identity fields for an actual run."]
+}

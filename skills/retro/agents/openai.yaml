@@ -1,5 +1,5 @@
 interface:
   display_name: "Retro"
-  short_description: "Turn a session's mistakes into environment fixes"
+  short_description: "Measure a session or workflow and preserve a private retrospective"
 policy:
   allow_implicit_invocation: false
