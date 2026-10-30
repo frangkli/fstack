@@ -35,15 +35,18 @@ Where the repo has its own convention, it wins. The recommended lint config also
 
 Confirm the repo's tsconfig `target` and `lib` and its runtime version (`engines`, `.nvmrc`, `.tool-versions`) include a feature before using it. Where they do, use the built-in instead of a helper or a dependency:
 
-| Instead of | Use |
-|---|---|
-| `try`/`finally` that releases a handle | `using` / `await using` with a `[Symbol.dispose]` or `[Symbol.asyncDispose]` method (TS 5.2, plus runtime support) |
-| `let resolve; new Promise((r) => { resolve = r; })` | `const { promise, resolve, reject } = Promise.withResolvers<T>()` (ES2024) |
-| A `reduce` that builds groups | `Object.groupBy(items, keyOf)`, or `Map.groupBy` for non-string keys (ES2024) |
-| Set math with `filter` and `has` | `a.union(b)`, `a.intersection(b)`, `a.difference(b)`, `a.isSubsetOf(b)` (ES2025) |
-| `[...iter].filter().map()` over a large or lazy iterable | Iterator helpers: `iter.filter(f).map(g).take(n).toArray()` (ES2025) |
-| Collecting an async iterable in a loop | `await Array.fromAsync(source)` (ES2024) |
-| A hand-made timeout signal | `AbortSignal.timeout(ms)`, joined with a caller's signal by `AbortSignal.any([a, b])` |
+| Needs | Instead of | Use |
+|---|---|---|
+| TS 5.2, `esnext.disposable` in `lib`, runtime support | `try`/`finally` that releases a handle | `using` / `await using` with a `[Symbol.dispose]` or `[Symbol.asyncDispose]` method |
+| ES2023 `lib` | `[...xs].sort(f)` or a copy then `sort` | `xs.toSorted(f)`, `toReversed`, `with`, `findLast` |
+| ES2024 `lib` | `let resolve; new Promise((r) => { resolve = r; })` | `const { promise, resolve, reject } = Promise.withResolvers<T>()` |
+| ES2024 `lib` | A `reduce` that builds groups | `Object.groupBy(items, keyOf)`, or `Map.groupBy` for non-string keys |
+| `esnext` `lib` | Collecting an async iterable in a loop | `await Array.fromAsync(source)` |
+| ES2025 `lib` | Set math with `filter` and `has` | `a.union(b)`, `a.intersection(b)`, `a.difference(b)`, `a.isSubsetOf(b)` |
+| ES2025 `lib` | `[...iter].filter().map()` over a large or lazy iterable | Iterator helpers: `iter.filter(f).map(g).take(n).toArray()` |
+| `DOM` `lib`, or Node 20 | A hand-made timeout signal | `AbortSignal.timeout(ms)`, joined with a caller's signal by `AbortSignal.any([a, b])` |
+
+A newer `lib` only changes what type-checks. A bundler lowers new syntax but adds no polyfills for built-ins, so a built-in the user's browser or runtime lacks throws at run time with no type error to warn of it.
 
 ## Logging
 

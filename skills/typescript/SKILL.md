@@ -21,7 +21,7 @@ Load a reference only when its case applies:
 
 | Case | Read |
 |---|---|
-| Writing a generic, brand, correlated union, assertion function, template-literal, conditional or mapped type, a type test, or chasing slow type checks | [references/patterns.md](references/patterns.md) |
+| Writing a generic, brand, correlated union, labeled or non-empty tuple, assertion function, template-literal, conditional or mapped type, typestate, command type, capability parameter or type test, or chasing slow type checks | [references/patterns.md](references/patterns.md) |
 | Creating or changing a tsconfig, module mode or import extensions | [references/tsconfig.md](references/tsconfig.md) |
 | A lint rule or flag gets in the way, you want to disable one, or the repo's config lacks or contradicts a rule | [references/lint.md](references/lint.md) |
 | The code is React (`.tsx` components, hooks, props) | [references/react.md](references/react.md) |
@@ -41,12 +41,12 @@ Load a reference only when its case applies:
   ```ts
   // Before: { loading: boolean; data?: User; error?: Error }
   type UserState =
-    | { readonly kind: "loading" }
-    | { readonly kind: "loaded"; readonly user: User }
-    | { readonly kind: "failed"; readonly error: Error };
-  function render(state: Extract<UserState, { kind: "loaded" }>) { /* state.user is there */ }
+    | { readonly status: "loading" }
+    | { readonly status: "loaded"; readonly user: User }
+    | { readonly status: "failed"; readonly error: Error };
+  function render(state: Extract<UserState, { status: "loaded" }>) { /* state.user is there */ }
   ```
-- **Discriminant name:** the codebase's. In new code, `kind` for domain variants, `status` for lifecycle states, `_tag` in Effect code.
+- **Discriminant name:** the codebase's, and for data from an API the wire format's own field. In new code, name it after the distinction it draws (`status` for a lifecycle, `outcome` for a result, `channel` for a delivery route), so the field keeps its domain meaning; use `kind` only when no domain word names the distinction, `type` for reducer actions, and `_tag` in Effect code.
 - **Build the shape so the bad value can't exist:** `[T, ...T[]]` for a non-empty list, `start` plus `duration` instead of two dates that must be ordered.
 - **Stop at the simplest total type.** Keep `T[]` while every operation on it works for all values. Strengthen a type only where the loose one forces a `!`, a cast or a "can't happen" throw.
 - **One canonical value, types derived from it.** When a schema, generated client, OpenAPI or protobuf definition, or DB schema owns a shape, infer the type from it. When the set of values must exist at runtime, write it once `as const`, check it with `satisfies`, and derive the union, so adding an entry updates the type:
@@ -124,13 +124,13 @@ Each empty state gets one spelling, so readers can tell "not provided" from "pro
 
 Split by kind of failure, and keep one style per module:
 
-1. **Bugs, broken invariants and infrastructure faults throw** an `Error` subclass, with the original as `cause`. Let it reach the one boundary handler (the request handler, job runner or CLI entry point) that logs and responds.
+1. **Bugs, broken invariants and infrastructure faults throw** an `Error`, with the original as `cause`. Subclass `Error` only when a caller checks for it with `instanceof`; a subclass nobody checks adds a type and nothing else. Let it reach the one boundary handler (the request handler, job runner or CLI entry point) that logs and responds.
 2. **Expected outcomes the caller must branch on** (not found, conflict, validation failed, quota reached) are part of the return type, as a discriminated union named for the domain. Use the repo's existing `Result` type if it has one; don't add a result library to a repo that lacks one.
    ```ts
    type ReserveResult =
-     | { kind: "reserved"; reservation: Reservation }
-     | { kind: "sold-out" }
-     | { kind: "over-limit"; limit: number };
+     | { outcome: "reserved"; reservation: Reservation }
+     | { outcome: "sold-out" }
+     | { outcome: "over-limit"; limit: number };
    ```
 3. **In Effect code,** expected failures are tagged errors in the error channel and bugs are defects. See [references/effect.md](references/effect.md).
 
@@ -148,7 +148,7 @@ Split by kind of failure, and keep one style per module:
   }
   get(user, "email"); // string
   ```
-  When a handler, payload or result depends on a discriminant (`type`, `kind`, an event name), key them all from one map type so the compiler checks the pairing: [references/patterns.md](references/patterns.md), correlated unions.
+  When a handler, payload or result depends on a discriminant (an event name, a `status`), key them all from one map type so the compiler checks the pairing: [references/patterns.md](references/patterns.md), correlated unions.
 - **Design generics for inference at call sites.** If callers always pass type arguments, change the design. A `const` type parameter keeps literal types without `as const` at the call site; `NoInfer<T>` checks an argument against `T` without letting it widen `T`:
   ```ts
   function machine<const S extends string>(states: readonly S[], initial: NoInfer<S>) { /* … */ }

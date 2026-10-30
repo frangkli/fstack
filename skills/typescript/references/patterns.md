@@ -1,8 +1,30 @@
 # Advanced patterns
 
-Read when writing a generic, a brand, a correlated union, an assertion function, a template-literal, conditional or mapped type, a type test, or when type checking is slow. In Effect code, [effect.md](effect.md) replaces the brand, result, union and exhaustiveness patterns below with Effect's own.
+Read when writing a generic, a brand, a correlated union, a labeled or non-empty tuple, an assertion function, a template-literal, conditional or mapped type, a typestate, a command type, a capability parameter or a type test, or when type checking is slow. In Effect code, [effect.md](effect.md) replaces the brand, result, union and exhaustiveness patterns below with Effect's own.
 
 Each pattern names its payoff and when to skip it. The bar from SKILL.md holds: a pattern goes in only where it removes a cast, a `!`, a duplicated declaration or a runtime check, or turns a likely mistake into a compile error. Check the TypeScript version the repo pins before using a feature: `satisfies` 4.9, `const` type parameters 5.0, `NoInfer` 5.4, inferred type predicates 5.5.
+
+Most application code needs none of these: a thin client that fetches, arranges and renders data from an API will reach for one rarely. A reviewer asks each pattern for its payoff, and one without a payoff is rewritten as the plain type.
+
+## Catalogue
+
+| Pattern | Use it when | Skip it when |
+|---|---|---|
+| Event map, keyed with `keyof` and indexed access ([correlated unions](#correlated-unions)) | a payload, handler or result depends on a name or discriminant, in more than one place | two or three variants are handled in one `switch` |
+| Mapped union over the event map ([correlated unions](#correlated-unions)) | a message, action or job union must stay in step with that map | the union is written once and nothing else is derived from it |
+| Generic over `keyof T` returning `T[K]` ([relationship-preserving generics](#relationship-preserving-generics)) | the result type depends on which key the caller passes | the function treats the value opaquely: take the wide type |
+| Labeled tuple, `NonEmpty<T>` ([tuples](#labeled-tuples-and-non-empty-lists)) | positions have fixed meanings, or a length guarantee removes a check | items are uniform (`readonly T[]`), or a reader would have to look up what each position means: return a named interface |
+| `const` type parameter ([`const` and `NoInfer`](#const-type-parameters-and-noinfer)) | a declaration helper must keep the literal types callers pass, without `as const` at each call | the parameter only feeds a wide type such as `string[]` |
+| `NoInfer<T>` ([`const` and `NoInfer`](#const-type-parameters-and-noinfer)) | a default or fallback argument must match another argument instead of widening it | one argument decides `T` alone |
+| Assertion function, `asserts x is T` ([assertion functions](#assertion-functions)) | an invariant whose failure is a bug, after which the caller continues on the narrowed value | failure is an expected outcome: return a union |
+| Branded id or unit, `UserId`, `Milliseconds` ([branded types](#branded-types)) | values that mean different things travel side by side, or values in different units meet in arithmetic across modules | a unit suffix on the name is enough (`timeoutMs`) |
+| Template literal type ([template-literal types](#template-literal-types)) | a small closed set of structured strings: event names, CSS custom properties, `` `${Entity}.${Action}` `` | the set is open, or the cross product grows past a few hundred members: parse a `string` |
+| Mapped type with key remapping, `as` ([conditional and mapped types](#conditional-and-mapped-types)) | many contracts follow one naming rule, such as an `onXChange` per field | one or two contracts: write them out |
+| Conditional type with `infer` ([conditional and mapped types](#conditional-and-mapped-types)) | a small, named transformation that no built-in utility covers | `Awaited`, `ReturnType`, `Parameters`, `NonNullable` or `Extract` already does it |
+| Typestate: one type per lifecycle step ([typestate](#typestate-and-command-types)) | calling a step out of order is a bug (draft, validated, submitted) | the flow has one step, or the server checks the order anyway |
+| Command type per operation ([command types](#typestate-and-command-types)) | an operation may change only some fields (`RenameProject`) | the operation is a true patch: `Partial<Pick<T, …>>` |
+| Patch field `x?: T \| null` ([precise absence](#precise-absence)) | an update must tell "leave as is" (absent), "clear" (`null`) and "replace" apart | the field can't be cleared |
+| Capability parameter: a function or narrow interface ([capability parameters](#capability-parameters)) | a module needs a side effect, such as the clock, a socket opener or storage, that a test must replace | the framework already injects it (React context, a query client, a DI container) |
 
 ## Relationship-preserving generics
 
@@ -39,18 +61,18 @@ interface EventMap {
   "order.paid": { readonly orderId: OrderId; readonly amountCents: number };
 }
 type EventName = keyof EventMap;
-type AppEvent = { [K in EventName]: { readonly type: K; readonly payload: EventMap[K] } }[EventName];
+type AppEvent = { [K in EventName]: { readonly name: K; readonly payload: EventMap[K] } }[EventName];
 type Handlers = { readonly [K in EventName]: (payload: EventMap[K]) => void };
 
-function dispatch<K extends EventName>(handlers: Handlers, event: { type: K; payload: EventMap[K] }) {
-  handlers[event.type](event.payload); // checked: Handlers[K] takes EventMap[K]
+function dispatch<K extends EventName>(handlers: Handlers, event: { name: K; payload: EventMap[K] }) {
+  handlers[event.name](event.payload); // checked: Handlers[K] takes EventMap[K]
 }
 
 function on<K extends EventName>(name: K, listener: (payload: EventMap[K]) => void): () => void { /* … */ }
 on("order.paid", (p) => p.amountCents); // p is the order.paid payload
 ```
 
-- Before: `(handlers[event.type] as any)(event.payload)`, or a `switch` repeating every case. Adding an event to `EventMap` now updates `AppEvent`, `Handlers` and every `on` call site, and a missing handler fails to compile.
+- Before: `(handlers[event.name] as any)(event.payload)`, or a `switch` repeating every case. Adding an event to `EventMap` now updates `AppEvent`, `Handlers` and every `on` call site, and a missing handler fails to compile.
 - The map is the canonical value. When a schema owns the event shapes, derive `EventMap` from it.
 - **Skip when** there are two or three variants handled in one place: a discriminated union and an exhaustive `switch` read more plainly.
 
@@ -69,6 +91,23 @@ machine(["idle", "busy"], "idel"); // error
 - `NoInfer` fits defaults, fallbacks and "one of the values above" arguments.
 - **Skip `const`** when the parameter only feeds a wide type (`string[]`); a primitive-constrained parameter (`P extends string`) already infers a literal from a literal argument.
 
+## Labeled tuples and non-empty lists
+
+Labels name each position in hovers and errors, and a tuple with a rest element encodes a minimum length, so the code that reads the first item needs no emptiness check.
+
+```ts
+type Point = readonly [x: number, y: number];
+type NonEmpty<T> = readonly [T, ...T[]];
+
+function first<T>(items: NonEmpty<T>): T {
+  return items[0]; // T, not T | undefined, even under noUncheckedIndexedAccess
+}
+```
+
+- A tuple fits a hook that mirrors `useState` (`[value, setValue]`) and a pair whose order every reader knows. Past two positions, or when a reader would have to look up what a position means, return a named interface.
+- Build a `NonEmpty<T>` once, where the length is checked (an assertion function or a parser), and pass it inward.
+- **Skip when** the items are uniform and the code works for any length: `readonly T[]`.
+
 ## Branded types
 
 ```ts
@@ -77,7 +116,7 @@ export type Brand<T, Name extends string> = T & { readonly [brand]: Name };
 
 export type UserId = Brand<string, "UserId">;
 export function parseUserId(raw: string): UserId {
-  if (!/^usr_[a-z0-9]{12}$/.test(raw)) throw new InvalidIdError("UserId", raw);
+  if (!/^usr_[a-z0-9]{12}$/.test(raw)) throw new Error(`not a UserId: ${raw}`);
   return raw as UserId; // the only cast; every UserId passes through here
 }
 
@@ -86,8 +125,9 @@ cancel(userId, orderId); // error: swapped arguments no longer compile
 ```
 
 - One `Brand` helper per repo; one constructor per brand. With a schema library, brand in the schema, so decoding and branding are one step.
-- Brand a unit when units mix in arithmetic (`Cents` vs `Dollars`, `Ms` vs `Seconds`).
 - **Skip when** the primitive has one meaning in its module, or values of different meanings never meet in one signature.
+
+A brand also separates units that share a representation (`Cents` and `Dollars`, `Milliseconds` and `Seconds`), when values in different units meet in arithmetic across modules: `type Milliseconds = Brand<number, "Milliseconds">` stops a seconds value reaching a `setTimeout` wrapper. Within one module, a unit suffix on the name (`timeoutMs`) is enough.
 
 ## Canonical values with `satisfies` and `as const`
 
@@ -144,14 +184,14 @@ row.total; // narrowed, no `!`
 
 ```ts
 type ReserveResult =
-  | { readonly kind: "reserved"; readonly reservation: Reservation }
-  | { readonly kind: "sold-out" }
-  | { readonly kind: "over-limit"; readonly limit: number };
+  | { readonly outcome: "reserved"; readonly reservation: Reservation }
+  | { readonly outcome: "sold-out" }
+  | { readonly outcome: "over-limit"; readonly limit: number };
 
 function reserve(stock: Stock, qty: number): ReserveResult { /* … */ }
 
 const r = reserve(stock, 2);
-switch (r.kind) {
+switch (r.outcome) {
   case "reserved": return ok(r.reservation);
   case "sold-out": return conflict("sold out");
   case "over-limit": return badRequest(`max ${r.limit}`);
@@ -223,6 +263,44 @@ type Listeners<T> = { [K in keyof T & string as `on${Capitalize<K>}`]?: (value: 
 - Give every non-trivial helper type a name and a one-line comment saying what it computes; the hover text is all a reader gets.
 - If a type takes more than a screen, generate the types from the source of truth (a schema, OpenAPI, the DB) instead.
 - **Overloads** only when the return type depends on which argument shape was passed and a union return would force callers to narrow. Otherwise one signature with a union parameter.
+
+## Typestate and command types
+
+Give each step of a lifecycle its own type, and make each transition a function from one type to the next, so calling a step out of order fails to compile. TypeScript compares types by shape, so brand each step type ([branded types](#branded-types)); otherwise an object literal of the right shape skips the transition. Give each operation that changes only some fields its own input type, so a caller can't send fields the operation must not touch.
+
+```ts
+interface DraftInvoice { readonly lines: readonly Line[] }
+type ValidatedInvoice = Brand<{ readonly lines: NonEmpty<Line>; readonly totalCents: number }, "ValidatedInvoice">;
+type IssuedInvoice = Brand<{ readonly lines: NonEmpty<Line>; readonly totalCents: number; readonly number: InvoiceNumber }, "IssuedInvoice">;
+
+type Validation =
+  | { readonly outcome: "valid"; readonly invoice: ValidatedInvoice }
+  | { readonly outcome: "invalid"; readonly problems: readonly string[] };
+
+declare function validation(draft: DraftInvoice): Validation; // the one place a ValidatedInvoice is made
+declare function issue(invoice: ValidatedInvoice): Promise<IssuedInvoice>; // a draft, or an issued invoice, can't be issued
+
+// Command type: renaming touches the name and nothing else.
+interface RenameProject { readonly projectId: ProjectId; readonly name: string }
+```
+
+- **Skip typestate when** the flow has one step, or a server enforces the order anyway and the client only displays the state: a `status` union is enough.
+- **Skip a command type when** the operation is a true patch over editable fields: `Partial<Pick<Project, "name" | "description">>`.
+
+## Capability parameters
+
+Pass a side effect a module needs (the clock, a socket opener, storage, randomness) as a parameter: a function type or a narrow interface. The module stays a plain function of its inputs, and a test passes a fake without mocking modules.
+
+```ts
+type OpenSocket = (url: string) => WebSocket;
+
+function connectFeed(url: string, open: OpenSocket, now: () => number): Feed { /* … */ }
+
+// In a test: connectFeed("wss://example.test", () => fakeSocket, () => 1_700_000_000_000)
+```
+
+- Take only what the module calls: `() => number` for the clock, not a whole `Clock` service. A function that reads the time once takes the value instead (`now: Date`, SKILL.md's pure core); pass the clock itself only to code that reads it repeatedly over time, such as a retry loop or a reconnecting feed.
+- **Skip when** the framework already injects the dependency (React context, a query client, a DI container), or the effect is the module's whole job.
 
 ## Type tests
 
