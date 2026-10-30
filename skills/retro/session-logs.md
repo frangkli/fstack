@@ -23,3 +23,5 @@ Look for the harness's documented transcript folder, or ask the user for the pat
 - Read every user turn first: corrections, repeated instructions and frustration mark the expensive moments.
 - Then the failed tool calls and the repeated work: the same file read three or more times, or the same edit made twice. Re-reads right after a context compaction don't count.
 - Cite findings as `<file>:<line>` in the log, and take every number from the log or a command you ran.
+- Preserve the required excerpts and normalized inputs with [records.md](records.md). A local log path alone is not a durable citation.
+- For a workflow, enumerate included sessions and child tasks before summing usage. Working-directory and time filters alone can include unrelated sessions or miss children. Use [measurements.md](measurements.md) for provider counter semantics, overlap and attribution.
