@@ -1,6 +1,6 @@
 # fstack
 
-What my agents know. 29 skills, from a one-line fix to a whole product.
+What my agents know. 30 skills, from a one-line fix to a whole product.
 
 ## Install
 
@@ -41,6 +41,7 @@ git clone https://github.com/frangkli/fstack && cp fstack/agents/*.md ~/.claude/
 | `improve` | Review, verify and fix with a fixed round budget. |
 | `pr` | Phased commits, a readable PR body, and babysitting until CI and reviews are green. |
 | `typescript` | Coding and review rules for TypeScript repos. |
+| `rust` | Coding and review rules for Rust repos. |
 
 **Docs and writing**
 
