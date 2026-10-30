@@ -31,7 +31,9 @@ Done when the branch is named, the file list is written down, and `.context/` is
 
 Run `adversarial-review` on the change. It fixes what it confirms through `improve`. Skip it only when it already ran on this exact change (its report names the current head and nothing changed since), or the task itself waived or replaced the review.
 
-Done when the review reports done. If it escalates, stop and report the escalation; ship after the user rules on it.
+Then run `improve`'s [final style pass](../improve/SKILL.md#final-style-pass) on the branch, whichever skill sent the change here. Put each design question it reports in your report's decisions.
+
+Done when the review and the final style pass report done. If the review or the final style pass halts or escalates, stop and report it; ship after the user rules on it.
 
 ## 3. Commit in phases
 
