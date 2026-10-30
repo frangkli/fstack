@@ -1,13 +1,13 @@
 ---
 name: rust
-description: 'Coding rules for Rust repos. Load before your first edit to any .rs file in a task (a feature, fix, refactor or test), even when the request never says "Rust", e.g. "add a flag to the CLI". Also load when reviewing or polishing Rust code (then read its review reference too), and before changing Cargo.toml lints or dependencies, or clippy.toml.'
+description: 'Review rules for Rust code: domain types, ownership, errors, traits, concurrency, patterns and libraries. Load when reviewing, auditing or polishing Rust (a PR review, a design review of planned types, a final style pass, a design-and-style review lane), even when the request never says "Rust" but the change has .rs files, and before changing Cargo.toml lints or clippy.toml, e.g. "review this PR" or "make the clippy lints stricter". Not for writing new code or making a fix: an agent asked to "add a retry to the HTTP client" or "fix the off-by-one in the tokenizer" works from the repo''s own conventions and leaves these rules to the review.'
 ---
 
 # Rust
 
-The rules that shape the design and correctness of Rust code: domain types, ownership and allocation, errors, functions, traits and modules, data and determinism, concurrency and async, and expensive work. Load this file before implementing.
+The rules a review checks Rust code against: domain types, ownership and allocation, errors, functions, traits and modules, data and determinism, concurrency and async, and expensive work. Load this file to review, audit or polish code, and before changing Cargo.toml lints or clippy.toml. Implementation works from the repo's own conventions; these rules apply once the code works.
 
-- **Once the code works, and when reviewing:** read [references/review.md](references/review.md) for naming, idioms, std usage, tracing, tests and the design-review checklist, and fix what it flags in the code you changed before handing off. This style pass is part of every implementation task, however small.
+- **For a style pass or a review:** read [references/review.md](references/review.md) for naming, idioms, std usage, tracing, tests and the design-review checklist, In a polish or style pass, fix what it flags in the changed code; in a review lane, report it. The repo's workflow runs this pass once the code works.
 - **Mechanical rules** are rustfmt's, Clippy's and the compiler's: no `unwrap` outside tests, no `#[allow]`, no `mod.rs`, no printing, clock or randomness in library code. [references/lint.md](references/lint.md) gives the baseline lint set and says when a lint may be disabled.
 
 Write Rust shapes: closed sets as enums, domain strings as newtypes, and data stored once and referred to by index. Habits from other languages (string tags, structs of optional fields, classes with setters, object graphs) compile in Rust but give up what the type system checks.
@@ -22,17 +22,17 @@ Load a reference only when its case applies:
 
 | Case | Read |
 |---|---|
-| Writing typestate, a marker parameter, a branded id family, a sealed or extension trait, an associated type, a `#[must_use]` plan or guard, or reaching for `Cow`, `SmallVec`, an arena, interning or another pattern to cut a measured cost | [references/patterns.md](references/patterns.md) |
-| Adding, choosing or configuring a dependency, or writing code against serde, clap, tracing, tokio, a retry or database client, or another library it lists | [references/libraries.md](references/libraries.md) |
+| The code has or needs typestate, a marker parameter, a branded id family, a sealed or extension trait, an associated type, a `#[must_use]` plan or guard, or reaching for `Cow`, `SmallVec`, an arena, interning or another pattern to cut a measured cost | [references/patterns.md](references/patterns.md) |
+| The change adds, chooses or configures a dependency, or uses serde, clap, tracing, tokio, a retry or database client, or another library it lists | [references/libraries.md](references/libraries.md) |
 | A lint gets in the way, you want to disable one, or you set up or change Cargo lints or `clippy.toml` | [references/lint.md](references/lint.md) |
 
-## Done means
+## A finished pass
 
-- **Checks pass.** Take the commands from the repo's `GATES.md`; without one, from AGENTS.md, the repo's task runner and its CI config. While iterating, run the cheapest command that covers the crates you touched (`cargo clippy -p <crate> --all-targets`, `cargo test -p <crate>`). When a `pub` item changed, also check the crates that depend on it. Run the full readiness command only at ship points. Show the output: zero errors, zero warnings.
-- **No silent escape hatches.** Every new `#[expect]`, `unsafe` block, `.expect()` or `.clone()` in a loop meets its rule here, and your handoff lists each one with its reason.
-- **No new suppressions to get green.** If a check fails, fix the code; never add `#[allow]` or loosen a lint level to pass.
-- **Style pass done.** After the code works, re-read the diff against [references/review.md](references/review.md) and fix what it flags.
-- **Every advanced pattern pays for itself.** Each trait, generic, marker parameter, lifetime parameter, macro or smart pointer you add removes a runtime check, a clone, a duplicated declaration or a measured cost, or turns a likely mistake into a compile error. Name that payoff in your handoff; where you can't, use the plain type.
+- **Checks pass on the change.** Run the repo's commands (its `GATES.md`; without one, AGENTS.md, the repo's task runner and its CI config) over the changed crates (`cargo clippy -p <crate> --all-targets`, `cargo test -p <crate>`) and the crates that depend on a changed `pub` item. Show the output: zero errors, zero warnings.
+- **Every escape hatch in the diff is accounted for.** Each new `#[expect]`, `unsafe` block, `.expect()` or `.clone()` in a loop meets its rule here and carries its reason (the `reason =`, a `// SAFETY:` comment, the `.expect` message, a comment); one without a reason is a finding.
+- **No suppression bought green.** An `#[allow]` or a loosened lint level in the diff is a finding: fix the code instead.
+- **The style pass ran.** The diff was read against [references/review.md](references/review.md).
+- **Every advanced pattern pays for itself.** Each trait, generic, marker parameter, lifetime parameter, macro or smart pointer in the diff removes a runtime check, a clone, a duplicated declaration or a measured cost, or turns a likely mistake into a compile error. One whose payoff nobody can name becomes the plain type.
 
 ## Model the domain
 

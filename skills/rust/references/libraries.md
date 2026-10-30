@@ -1,6 +1,6 @@
 # Libraries
 
-Read when adding, choosing or configuring a dependency, or when writing code against a library listed here. The repo's existing choice wins (SKILL.md, Precedence): where it already uses a different crate for a job, use that one and mention a proposed switch in your handoff.
+Read when a change adds, chooses or configures a dependency, or uses a library listed here. The repo's existing choice wins (SKILL.md, Precedence): where it already uses a different crate for a job, use that one and mention a proposed switch in your handoff.
 
 ## When a library earns its place
 

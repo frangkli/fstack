@@ -1,6 +1,6 @@
 # Advanced patterns
 
-Read when writing typestate, a marker parameter, a branded id family, a sealed or extension trait, an associated type, or a `#[must_use]` plan or guard, or when a profile points at allocation, hashing or dispatch.
+Read when the code has or needs typestate, a marker parameter, a branded id family, a sealed or extension trait, an associated type, or a `#[must_use]` plan or guard, or when a profile points at allocation, hashing or dispatch.
 
 Each pattern names when it pays and when to skip it. The bar from SKILL.md holds: a pattern goes in only where it removes code, a runtime check or a measured cost, or turns a likely mistake into a compile error. A pattern that needs a new crate also passes the library test in [libraries.md](libraries.md).
 

@@ -1,6 +1,6 @@
 # Advanced patterns
 
-Read when writing a generic, a brand, a correlated union, a labeled or non-empty tuple, an assertion function, a template-literal, conditional or mapped type, a typestate, a command type, a capability parameter or a type test, or when type checking is slow. In Effect code, [effect.md](effect.md) replaces the brand, result, union and exhaustiveness patterns below with Effect's own.
+Read when the code has or needs a generic, a brand, a correlated union, a labeled or non-empty tuple, an assertion function, a template-literal, conditional or mapped type, a typestate, a command type, a capability parameter or a type test, or when type checking is slow. In Effect code, [effect.md](effect.md) replaces the brand, result, union and exhaustiveness patterns below with Effect's own.
 
 Each pattern names its payoff and when to skip it. The bar from SKILL.md holds: a pattern goes in only where it removes a cast, a `!`, a duplicated declaration or a runtime check, or turns a likely mistake into a compile error. Check the TypeScript version the repo pins before using a feature: `satisfies` 4.9, `const` type parameters 5.0, `NoInfer` 5.4, inferred type predicates 5.5.
 

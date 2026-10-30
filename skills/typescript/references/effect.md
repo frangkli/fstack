@@ -1,6 +1,6 @@
 # Effect
 
-Read before writing code in a package that imports `effect`. Where this file conflicts with SKILL.md, this file wins: the mapping table names each vanilla rule Effect replaces. Rules not in the table apply unchanged. This file holds the rules that shape design and correctness; the idioms a review or polish pass checks (`Effect.fn` style, logging and spans, tests) are in [effect-review.md](effect-review.md). Read this file whole; once the code works, do SKILL.md's style pass with [review.md](review.md) and effect-review.md.
+Read when the code under review is in a package that imports `effect`. Where this file conflicts with SKILL.md, this file wins: the mapping table names each vanilla rule Effect replaces. Rules not in the table apply unchanged. This file holds the rules that shape design and correctness; the idioms a review or polish pass checks (`Effect.fn` style, logging and spans, tests) are in [effect-review.md](effect-review.md). Read this file whole; once the code works, do SKILL.md's style pass with [review.md](review.md) and effect-review.md.
 
 Names in examples are Effect 4 (checked against a 4.0 release candidate), with the Effect 3 spelling where it differs. Effect's own docs and community guides mix versions and even release candidates of one version (an error-class constructor and the `Config` constructors were renamed during the 4.0 betas), so confirm every name against the installed source before writing it.
 
@@ -44,7 +44,7 @@ In Effect code the right column is the default. Keep the vanilla form only where
 
 ## Rules that apply unchanged
 
-From SKILL.md, inside Effect code too: Precedence and Done means; illegal states unrepresentable (with `_tag`); the simplest total type; one canonical value with types derived from it (the Effect Schema is that value); literal unions, never `enum`; `satisfies` for tables; relationship-preserving generics, `const` type parameters and `NoInfer`; escape hatches (no `any`, unchecked `as` or `!`; a type parameter appears twice); immutability, `readonly` inputs and small total functions; security musts. At review time, [review.md](review.md) applies too, with [effect-review.md](effect-review.md) taking precedence.
+From SKILL.md, inside Effect code too: Precedence and A finished pass; illegal states unrepresentable (with `_tag`); the simplest total type; one canonical value with types derived from it (the Effect Schema is that value); literal unions, never `enum`; `satisfies` for tables; relationship-preserving generics, `const` type parameters and `NoInfer`; escape hatches (no `any`, unchecked `as` or `!`; a type parameter appears twice); immutability, `readonly` inputs and small total functions; security musts. At review time, [review.md](review.md) applies too, with [effect-review.md](effect-review.md) taking precedence.
 
 ## Errors
 
