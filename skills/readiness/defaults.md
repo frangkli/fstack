@@ -45,6 +45,6 @@ For OBS-1 to OBS-8. Wide events from the first log line; the rest once the app h
 
 - A `verify` skill made with `verify-create`; browser surfaces driven with agent-browser, with an axe scan and a console check per page.
 - Review rules and Known non-issues in `REVIEW_RULES.md` at the repo root, linked from `AGENTS.md`, with each review bot pointed at it from its dashboard and no bot rules files in the repo (see [agent-docs.md](agent-docs.md)).
-- `STYLE.md` at the repo root from [style-template.md](style-template.md), with each language's never list, linked from `AGENTS.md`.
+- `STYLE.md` at the repo root from [style-template.md](style-template.md), and each language's never list in a `STYLE.md` beside that language's code, all linked from `AGENTS.md`.
 - `GLOSSARY.md` at the repo root: each domain term on one line with its meaning in this project, drawn from the code and docs, linked from `AGENTS.md`.
 - React or JSX UIs: readiness flags a missing `PRODUCT.md` and `DESIGN.md` and writes neither. The owner runs `/impeccable init`, which interviews them and writes `PRODUCT.md`; `DESIGN.md` comes from impeccable's document step or its first build.

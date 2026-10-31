@@ -37,12 +37,13 @@ Times come from runs you measured on this machine, rounded. Remove any `AGENTS.m
 
 ## STYLE.md
 
-Write [style-template.md](style-template.md) to the repo root as `STYLE.md`, and link it from the root `AGENTS.md` as the file to read before writing code.
+Write [style-template.md](style-template.md) to the repo root as `STYLE.md`. Each language's never list goes in that language's own `STYLE.md`, so an agent working in one language doesn't load another's rules.
 
-- Fill the index with one row per language the repo uses: its own style file if it has one (`STYLE.md` beside that language's code, for the repo's own decisions), its lint and compiler config files, and the skill that reviews it. Leave the style-file cell empty when there is none.
+- For each language the repo uses that has a stack file in [stacks/](stacks/), write a `STYLE.md` beside that language's code (`crates/STYLE.md`, `web/STYLE.md`) with a `## Never` section holding the items of the stack file's `## Never` list; drop items for libraries the repo doesn't use. The file also holds the repo's own decisions for that language. In a single-language repo with no separate language folder, add the `## Never` section to the root `STYLE.md` instead.
+- Fill the root file's index with one row per language the repo uses: its style file, its lint and compiler config files, and the skill that reviews it. Leave the style-file cell empty for a language with neither a never list nor its own decisions.
 - Rewrite each example in the repo's main language and naming case, and point Naming 4 at the file that defines the repo's domain terms (`GLOSSARY.md`, DOC-7).
-- Add one `## Never: <Language>` section per language that has a stack file in [stacks/](stacks/), copying the items of its `## Never` list; drop items for libraries the repo doesn't use.
-- When the repo already has a style document, merge the template (index, rules and never lists) into it instead: keep its rules, add the missing ones, and name each conflict in the hand-off for the owner to decide. If that document isn't the root `STYLE.md`, move it there.
+- Link the files from the root `AGENTS.md` in one line that names each language's file: "Read `STYLE.md`, plus `crates/STYLE.md` before Rust work or `web/STYLE.md` before TypeScript work."
+- When the repo already has a style document, merge the template into it instead: keep its rules, add the missing ones, and name each conflict in the hand-off for the owner to decide. Move its shared rules to the root `STYLE.md` and its language rules to that language's `STYLE.md`.
 
 ## GLOSSARY.md
 

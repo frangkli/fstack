@@ -1,6 +1,6 @@
 # Style
 
-The naming, comment and structure rules no formatter, linter or compiler checks, and each language's never list. Read this file before writing code, and a language's style file before working in that language.
+The naming, comment and structure rules no formatter, linter or compiler checks. Read this file before writing code, and a language's style file (its never list and the repo's own decisions) before working in that language.
 
 | Language | Style file | Lint config | Reviewed with |
 |---|---|---|---|
@@ -51,6 +51,3 @@ Code documents itself through its names and types, and every non-obvious choice 
 4. Build a value, then stop changing it: the binding that outlives construction is immutable.
 5. Declare each fact once: when two declarations must agree, derive one from the other.
 
-## Never: <Language>
-
-<The never list from the readiness skill's `stacks/<language>.md`, one section per language.>

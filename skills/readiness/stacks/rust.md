@@ -1,10 +1,10 @@
 # Rust stack
 
-The recommended lint setup for a Rust repo: the default to offer for VAL-1 and VAL-2 when the repo has no config, and the settings to merge into an existing config. It also holds the never list that readiness copies into the repo's `STYLE.md`. It matches the `rust` skill, which leaves every lint below to the tools. Confirm each lint name against the repo's pinned toolchain, and keep a repo's own lint set when it already does the job.
+The recommended lint setup for a Rust repo: the default to offer for VAL-1 and VAL-2 when the repo has no config, and the settings to merge into an existing config. It also holds the never list that readiness copies into the repo's Rust `STYLE.md`. It matches the `rust` skill, which leaves every lint below to the tools. Confirm each lint name against the repo's pinned toolchain, and keep a repo's own lint set when it already does the job.
 
 ## Never
 
-Mistakes that are costly once shipped and that the lints below don't catch. readiness copies this list into the repo's root `STYLE.md` (DOC-9), so implementers see it before the review does; the `rust` skill gives the reasons.
+Mistakes that are costly once shipped and that the lints below don't catch. readiness copies this list into the `STYLE.md` beside the repo's Rust code (DOC-9), so implementers see it before the review does; the `rust` skill gives the reasons.
 
 - Never panic on input (files, network payloads, config, requests, CLI arguments, env vars): return an error. `.expect("why this cannot fail")` is for a real invariant only.
 - Never pass input inward unparsed: parse it once, where it enters, into types that can't hold invalid values.
