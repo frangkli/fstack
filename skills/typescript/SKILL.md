@@ -9,10 +9,11 @@ The rules a review checks TypeScript code against: domain types, absence, trust 
 
 Where the guidance lives:
 
-- **This skill:** the review catalogue, in the rules below and the references the table under Precedence loads. For a style pass or a review, read [references/review.md](references/review.md) for idioms, naming, modules, platform features and test style. In a polish or style pass, fix what it flags in the changed code; in a review lane, report it. The repo's workflow runs this pass once the code works.
-- **Effect code:** if the package under review imports `effect`, read [references/effect.md](references/effect.md) first. Where it conflicts with this file, it wins.
-- **The readiness skill's [stacks/typescript.md](../readiness/stacks/typescript.md):** the tsconfig flags and lint config that readiness offers and merges into a repo. They enforce the mechanical rules: no `any` or `!`, handled index reads, floating promises, named exports, array and import style. [references/lint.md](references/lint.md) says when a rule may be disabled and what to do where the repo's config lacks one.
-- **In the repo:** the root `STYLE.md` (naming, comment and structure rules), the TypeScript `STYLE.md` where the repo has one, and the tsconfig and lint config files.
+- **This skill:** the review catalogue, in the rules below and the references the table under Precedence loads, plus the tsconfig baseline in [references/tsconfig.md](references/tsconfig.md). For a style pass or a review, read [references/review.md](references/review.md) for idioms, naming, modules, platform features and test style. In a polish or style pass, fix what it flags in the changed code; in a review lane, report it. The repo's workflow runs this pass once the code works.
+- **The readiness skill's [stacks/typescript.md](../readiness/stacks/typescript.md):** the lint config, and the compiler flags that replace lint rules, that readiness offers and merges into a repo. Once merged into the repo's config, they enforce the mechanical rules: no `any` or `!`, handled index reads, floating promises, named exports, array and import style. [references/lint.md](references/lint.md) says when a rule may be disabled and what to do where the repo's config lacks one.
+- **In the repo:** where the repo has them, a root `STYLE.md` for the naming, comment and structure rules every language shares and a TypeScript `STYLE.md`; and the tsconfig and lint config files.
+
+**Effect code:** if the package under review imports `effect`, read [references/effect.md](references/effect.md) first. Where it conflicts with this file, it wins.
 
 ## Precedence
 

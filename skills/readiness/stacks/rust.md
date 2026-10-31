@@ -48,6 +48,8 @@ unwrap_used = "warn"                 # write .expect("why this cannot fail") ins
 
 ## clippy.toml
 
+Beside the root `Cargo.toml`:
+
 ```toml
 allow-unwrap-in-tests = true
 doc-valid-idents = ["GraphQL", "PostgreSQL", ".."]   # ".." keeps Clippy's defaults

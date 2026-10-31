@@ -7,7 +7,7 @@ Read when a lint gets in the way, when you want to disable one, or when the repo
 - A failing lint is fixed in the code. Keep every lint and level as it is, and keep each exception to the smallest item that needs it.
 - Changing lint settings is a task of its own. Inside an unrelated change, propose the setting and its reason in your handoff instead.
 - Where the repo's config lacks a lint the baseline has, write the code as if it were on, and propose it in your handoff.
-- Where the repo's config contradicts this skill, the repo wins: write the code its way and name the conflict in your handoff.
+- Where the repo's config contradicts this skill, the repo wins (SKILL.md, Precedence): write the code its way and name the conflict in your handoff.
 
 ## Exceptions on one item
 
