@@ -1,6 +1,19 @@
 # TypeScript stack
 
-The recommended lint and type-check setup for a TypeScript repo: the default to offer for VAL-1 and VAL-2 when the repo has no config, and the settings to merge into an existing config. [React UI](#react-ui) covers VAL-6, VAL-7, TST-5 and TST-7; [pnpm](#pnpm) covers SEC-12. It matches the `typescript` skill, which leaves every rule below to the tools. Rule ids are Oxlint's (checked against Oxlint 1.87 with oxlint-tsgolint 7.0, Vite+ 0.2.9, and `@effect/tsgo` 0.51 with Effect 4.0.0-rc.110); confirm them against the installed version, and keep a repo's own linter when it already does the job.
+The recommended lint and type-check setup for a TypeScript repo: the default to offer for VAL-1 and VAL-2 when the repo has no config, and the settings to merge into an existing config. [React UI](#react-ui) covers VAL-6, VAL-7, TST-5 and TST-7; [pnpm](#pnpm) covers SEC-12. It also holds the never list that readiness copies into the repo's TypeScript `STYLE.md`. It matches the `typescript` skill, which leaves every lint rule and compiler flag below to the tools. Rule ids are Oxlint's (checked against Oxlint 1.87 with oxlint-tsgolint 7.0, Vite+ 0.2.9, and `@effect/tsgo` 0.51 with Effect 4.0.0-rc.110); confirm them against the installed version, and keep a repo's own linter when it already does the job.
+
+## Never
+
+Mistakes that are costly once shipped and that the lints below don't catch. readiness copies this list into the `STYLE.md` beside the repo's TypeScript code (DOC-9), so implementers see it before the review does; the `typescript` skill gives the reasons.
+
+- Never pass outside data inward unparsed: env vars, CLI arguments, queue messages and other input are `unknown` until a schema (or, without a schema library, a guard that checks every field) parses them, once, at the boundary.
+- Never let a missing security setting fall back to a permissive default: a missing limit never means "unlimited", nor a missing origin "allow all". Parse config once at startup into a typed object; a missing required setting fails with its name.
+- Never swallow an error: `catch { return [] }` and `?? []` on required data hide the failure. Catch only to recover, to translate at a boundary or to clean up.
+- Never make an outbound call without a timeout or the caller's `AbortSignal` (join them with `AbortSignal.any`), and never retry an operation that isn't idempotent.
+- Never write `target[key] = value` with a key from input: store user-keyed data in a `Map`.
+- Never compare a secret, token or MAC with `===`: use a constant-time comparison (`crypto.timingSafeEqual`).
+- Never use `Math.random` for tokens, ids or nonces: use `crypto.randomUUID()` or `crypto.getRandomValues()`.
+- Never read an id above 2^53 as a number: keep it a string or a `BigInt`.
 
 ## Compiler flags
 

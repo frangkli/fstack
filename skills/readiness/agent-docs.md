@@ -6,7 +6,7 @@ For gaps in the agent docs and build-and-checks areas. Read `writing-for-agents`
 
 - One root file under ~60 lines, never over 100. Add an app-level `AGENTS.md` only where that app's commands differ, shorter than the root.
 - Tables for commands, file-scoped first: test one file, lint one file, type-check one package. The full check appears once, as a pointer to `GATES.md`.
-- Pointers, not copies: one line each to `GATES.md`, `REVIEW_RULES.md`, `GLOSSARY.md`, the `verify` skill, setup docs, architecture and security docs that exist. Repo-relative paths only.
+- Pointers, not copies: one line each to `GATES.md`, `STYLE.md`, `REVIEW_RULES.md`, `GLOSSARY.md`, the `verify` skill, setup docs, architecture and security docs that exist. Repo-relative paths only.
 - Cache only what an agent can't find by looking: unwritten conventions, the reason behind a surprising choice, gotchas. Leave out linter settings, installed skills, slogans and commit attribution.
 - Claude reads `AGENTS.md` when `CLAUDE.md` links to it (`ln -s AGENTS.md CLAUDE.md`) or imports it (`@AGENTS.md`); add one only if the repo lacks both. Project skills live in `.agents/skills/`, with `.claude/skills` as a link to it.
 - A tool writes into `AGENTS.md` or `CLAUDE.md` only when the owner opts in, and only between its own markers (`<!-- <tool>:start -->` / `<!-- <tool>:end -->`), so it can update or remove its block without touching hand-written text. Flag tool-written text outside a fence.
@@ -34,6 +34,16 @@ While iterating, run the cheapest command that covers your change. When a unit o
 ```
 
 Times come from runs you measured on this machine, rounded. Remove any `AGENTS.md` line that asks for the full check before every hand-off.
+
+## STYLE.md
+
+Write [style-template.md](style-template.md) to the repo root as `STYLE.md`. Each language's never list goes in that language's own `STYLE.md`, so an agent working in one language doesn't load another's rules.
+
+- For each language the repo uses that has a stack file in [stacks/](stacks/), write a `STYLE.md` beside that language's code (`crates/STYLE.md`, `web/STYLE.md`) with a `## Never` section holding the items of the stack file's `## Never` list; drop items for libraries the repo doesn't use. The file also holds the repo's own decisions for that language. In a single-language repo with no separate language folder, add the `## Never` section to the root `STYLE.md` instead.
+- Fill the root file's index with one row per language the repo uses: its style file, its lint and compiler config files, and the skill that reviews it. Leave the style-file cell empty for a language with neither a never list nor its own decisions.
+- Rewrite each example in the repo's main language and naming case, and point Naming 4 at the file that defines the repo's domain terms (`GLOSSARY.md`, DOC-7).
+- Link the files from the root `AGENTS.md` in one line that names each language's file: "Read `STYLE.md`, plus `crates/STYLE.md` before Rust work or `web/STYLE.md` before TypeScript work."
+- When the repo already has a style document, merge the template into it instead: keep its rules, add the missing ones, and name each conflict in the hand-off for the owner to decide. Move its shared rules to the root `STYLE.md` and its language rules to that language's `STYLE.md`.
 
 ## GLOSSARY.md
 
