@@ -26,7 +26,7 @@ The **expected set** is those, plus every check that has appeared on any earlier
 
 ## A pass
 
-1. **State.** `git fetch origin`, then `gh pr view <n> --json headRefOid,isDraft,mergeable,mergeStateStatus,reviewDecision`. If your local branch doesn't contain the PR's head commit, someone else pushed: fetch their commits and build on them, never force-push over them. If it's a draft, `gh pr ready <n>`.
+1. **State.** `git fetch origin`, then `gh pr view <n> --json headRefOid,isDraft,mergeable,mergeStateStatus,reviewDecision`. If your local branch doesn't contain the PR's head commit, someone else pushed: fetch their commits and build on them, never force-push over them. If it's a draft: in drive or background mode, run the final style pass ([SKILL.md](SKILL.md) step 2) after steps 2-4's fixes and before step 5's push, then `gh pr ready <n>` after the push; in check or threads-only mode, report that it's a draft.
 2. **Conflicts.** If `mergeable` is `CONFLICTING`, rebase onto a fresh `origin/<base>`, resolve, and re-run the checks the resolution touches. In threads-only mode, report the conflict instead.
 3. **Threads.** Triage and fix per [threads.md](threads.md). Each fix is a fixup commit ([commits.md](commits.md)).
 4. **CI.** Watch, classify and fix, as below.

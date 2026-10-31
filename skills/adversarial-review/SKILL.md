@@ -40,6 +40,7 @@ Start every lane in one message, so they run in parallel; start `ocr` and Codex,
   | **High risk** | The bug pass, and design-and-style for the repo's conventions | Both passes in full |
 
   - **Confirming round** (`improve`'s round 2 or 3): one combined reviewer on the fix diff, plus the bug pass scoped to the same diff when it touches high-risk code, plus design-and-style in a lens run. It never reviews the whole change again. Its one packet takes `--lines 10` unless the fix diff touches high-risk files.
+  - **Final style pass** (`improve`'s [last run](../improve/SKILL.md#final-style-pass), before the PR is marked ready): the design-and-style lane alone, on one `--lines 10` packet of the full branch diff from the merge base.
   - **Add-ons:** the blast radius brief, for a small change whose safety rests on one fact; GitHub Actions, when the change touches `.github/workflows/**`.
   - **Nothing to check against:** a lane with nothing to review against isn't launched, for example design-and-style with no style document, no language `references/review.md` and no high-impact code. The coverage line names it and why.
   - When the change adds a check (a lint rule, a CI gate), the verifier proves it bites, in a scratch worktree under the state folder's `scratch/`: break the rule it enforces and see the check fail. A check that doesn't fail is a confirmed finding.
@@ -68,7 +69,7 @@ Sort the verified findings into four buckets:
 
 Rank a finding higher when two lanes raised it independently. Scrutinise security and data findings harder before dismissing them, not less.
 
-Record each confirmed finding, and each unverifiable minor or info, left out of Act on with `ledger.py verdict <state> <id> deferred <bucket>`, so `improve` doesn't pick it up.
+Record each confirmed finding, and each unverifiable minor or info, left out of Act on with `ledger.py verdict <state> <id> deferred <bucket>`, so `improve` doesn't pick it up; the final style pass re-checks and fixes the deferred design-and-style ones outside Dismissed.
 
 Done when all four lists are written in your reply, an empty one as "none", before anything goes to `improve`.
 

@@ -6,7 +6,8 @@
 The packet holds facts only, never the author's conclusions: the diff hunks with their
 enclosing functions (or <n> lines of context with --lines), the changed public items and
 where they're used, the spec sections the ticket names, the ledger's open and settled
-findings, and the rule files to read.
+findings, and the rule files to read: the root's, every STYLE.md above a changed file, and
+each changed language's review reference.
 """
 import argparse
 import json
@@ -94,6 +95,8 @@ def main():
              + "\n".join(f"- {f}" for f in files)]
 
     rules = [f"- {f}" for f in RULE_FILES if (root / f).exists()]
+    rules += [f"- {d}/STYLE.md" for d in sorted({d for f in files for d in Path(f).parents
+                                                 if d != Path(".") and (root / d / "STYLE.md").exists()})]
     for lang in sorted({LANGUAGES[Path(f).suffix] for f in files if Path(f).suffix in LANGUAGES}):
         ref = Path(__file__).resolve().parents[2] / lang / "references/review.md"  # a sibling skill
         if ref.exists():

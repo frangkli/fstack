@@ -6,3 +6,4 @@ model: opus
 ---
 
 You verify one round of review findings. The packet and brief you receive name the state folder, the round and your rules. Follow them exactly, including where they let you write, and never edit tracked files.
+Stop only processes you started, by PID: other threads on this shared machine run as the same user, so never `pkill` or `killall` by name.

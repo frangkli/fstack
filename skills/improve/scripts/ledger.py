@@ -1,11 +1,13 @@
 """Ledger operations for an improve state folder.
 
   ledger.py id <path> <title>                      print a finding's id
-  ledger.py init <state> <base> <scope>...         start a ledger
+  ledger.py init <state> <base> <scope>...         start a ledger and delete next.md
   ledger.py candidates <state> <round> [shards]    merge round-<n>/*.json into round-<n>/candidates.json,
                                                    and with shards > 1 split it by path into candidates-<k>.json
   ledger.py apply <state> <round> <head>           apply verified-<n>.json or every verified-<n>-<k>.json, and record the round
   ledger.py verdict <state> <id> <status> <reason> record a fixer's rejection or deferral
+  ledger.py style <state> <round>                  start the final style pass: write the deferred or open design-style
+                                                   findings not Dismissed to round-<n>/deferred.json for a re-check
   ledger.py outcome <state> <done|escalated|halted>
   ledger.py known <state> [max_chars]              open and settled findings, for ocr's background file
 """
@@ -49,7 +51,9 @@ def init(state, base, scope):
     state.mkdir(parents=True, exist_ok=True)
     ledger = read(state)
     ledger.update(base=base, scope=scope, outcome=None)
+    ledger.pop("style_pass", None)
     write(state, ledger)
+    (state / "next.md").unlink(missing_ok=True)
 
 
 def candidates(state, n, shards=1):
@@ -70,11 +74,11 @@ def candidates(state, n, shards=1):
             c["path"] = norm_path(c["path"])
             cid = finding_id(c["path"], c["title"])
             known = findings.get(cid)
-            if known and known["status"] in SETTLED and not c.get("worse"):
+            if known and known["status"] in SETTLED and not (c.get("worse") or c.get("recheck") and known["status"] == "deferred"):
                 dropped.append(f"{c['title']} ({cid}): {known['status']}")
                 continue
             entry = merged.setdefault(cid, {**c, "id": cid, "lanes": []})
-            entry["lanes"].append(result.get("lane", f.stem))
+            entry["lanes"].append(f.stem)
     (state / f"round-{n}" / "candidates.json").write_text(json.dumps(list(merged.values()), indent=2))
     print(f"{len(merged)} candidates, {len(dropped)} dropped as settled")
     for old in (state / f"round-{n}").glob("candidates-*.json"):
@@ -112,7 +116,9 @@ def apply(state, n, head):
     for v in (v for f in files for v in json.loads(f.read_text())):
         counts[v["verdict"]] = counts.get(v["verdict"], 0) + 1
         entry = findings.setdefault(v["id"], {"rounds_seen": []})
+        lanes = entry.get("lanes", []) + v.get("lanes", [])
         entry.update({k: v[k] for k in v if k not in ("id", "verdict")})
+        entry["lanes"] = list(dict.fromkeys(lanes))
         entry["status"] = STATUS[v["verdict"]]
         if v["verdict"] == "unverifiable":
             entry["reason"] = v.get("reason", "unverifiable")
@@ -131,6 +137,22 @@ def verdict(state, fid, status, reason):
     ledger = read(state)
     ledger["findings"][fid].update(status="deferred" if status == "deferred" else "open", fixer=status, reason=reason)
     write(state, ledger)
+
+
+def style(state, n):
+    ledger = read(state)
+    picked = [
+        {"id": i, "recheck": True, **{k: f[k] for k in ("title", "severity", "path", "lines", "trigger", "evidence", "remedy") if k in f}}
+        for i, f in ledger["findings"].items()
+        if f["status"] in ("deferred", "open") and "design-style" in f.get("lanes", [])
+        and not (f.get("reason") or "").lower().startswith("dismissed")
+    ]
+    out = state / f"round-{n}" / "deferred.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({"lane": "design-style", "status": "ISSUES" if picked else "PASS", "findings": picked}, indent=2))
+    ledger["style_pass"] = n
+    write(state, ledger)
+    print(f"{len(picked)} deferred or open design-style findings to re-check")
 
 
 def outcome(state, value):
@@ -169,6 +191,8 @@ if __name__ == "__main__":
         apply(Path(args[0]), int(args[1]), args[2])
     elif cmd == "verdict":
         verdict(Path(args[0]), args[1], args[2], " ".join(args[3:]))
+    elif cmd == "style":
+        style(Path(args[0]), int(args[1]))
     elif cmd == "outcome":
         outcome(Path(args[0]), args[1])
     elif cmd == "known":
