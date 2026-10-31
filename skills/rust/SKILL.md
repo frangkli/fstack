@@ -7,14 +7,17 @@ description: 'Review rules for Rust code: domain types, ownership, errors, trait
 
 The rules a review checks Rust code against: domain types, ownership and allocation, errors, functions, traits and modules, data and determinism, concurrency and async, and expensive work. Load this file to review, audit or polish code, and before changing Cargo.toml lints or clippy.toml. Implementation works from the repo's own conventions; these rules apply once the code works.
 
-- **For a style pass or a review:** read [references/review.md](references/review.md) for naming, idioms, std usage, tracing, tests and the design-review checklist, In a polish or style pass, fix what it flags in the changed code; in a review lane, report it. The repo's workflow runs this pass once the code works.
-- **Mechanical rules** are rustfmt's, Clippy's and the compiler's: no `unwrap` outside tests, no `#[allow]`, no `mod.rs`, no printing, clock or randomness in library code. [references/lint.md](references/lint.md) gives the baseline lint set and says when a lint may be disabled.
+Where the guidance lives:
+
+- **This skill:** the review catalogue, in the rules below and the references the table under Precedence loads. For a style pass or a review, read [references/review.md](references/review.md) for naming, idioms, std usage, tracing, tests and the design-review checklist. In a polish or style pass, fix what it flags in the changed code; in a review lane, report it. The repo's workflow runs this pass once the code works.
+- **The readiness skill's [stacks/rust.md](../readiness/stacks/rust.md):** the Cargo lints and `clippy.toml` that readiness offers and merges into a repo. With rustfmt and the compiler, they enforce the mechanical rules: no `unwrap` outside tests, no `#[allow]`, no `mod.rs`, no printing, clock or randomness in library code. [references/lint.md](references/lint.md) says when a lint may be disabled and what to do where the repo's config lacks one.
+- **In the repo:** the root `STYLE.md` (naming, comment and structure rules), the Rust `STYLE.md` where the repo has one, and `Cargo.toml` lints, `clippy.toml` and `rustfmt.toml`.
 
 Write Rust shapes: closed sets as enums, domain strings as newtypes, and data stored once and referred to by index. Habits from other languages (string tags, structs of optional fields, classes with setters, object graphs) compile in Rust but give up what the type system checks.
 
 ## Precedence
 
-1. **The repo first.** Its `Cargo.toml` lints, `clippy.toml`, `rustfmt.toml` and AGENTS.md win over this skill. Match the conventions of the crate and module you're in.
+1. **The repo first.** Its `Cargo.toml` lints, `clippy.toml`, `rustfmt.toml`, `STYLE.md` files and AGENTS.md win over this skill. Match the conventions of the crate and module you're in.
 2. **Where the repo has no convention,** use the documented current practice for the edition, toolchain and crate versions it pins (read `rust-toolchain.toml`, `Cargo.toml` and `Cargo.lock`; read a crate's source under `~/.cargo/registry/src/` or its docs at that version).
 3. **Where an existing pattern is clearly worse** than a rule here (a `Result<_, String>`, a `bool` argument that switches behaviour, an `unwrap` on input), use the better pattern in the code you're changing and say why in your handoff. Leave untouched code as it is and mention it instead.
 
@@ -24,7 +27,7 @@ Load a reference only when its case applies:
 |---|---|
 | The code has or needs typestate, a marker parameter, a branded id family, a sealed or extension trait, an associated type, a `#[must_use]` plan or guard, or reaching for `Cow`, `SmallVec`, an arena, interning or another pattern to cut a measured cost | [references/patterns.md](references/patterns.md) |
 | The change adds, chooses or configures a dependency, or uses serde, clap, tracing, tokio, a retry or database client, or another library it lists | [references/libraries.md](references/libraries.md) |
-| A lint gets in the way, you want to disable one, or you set up or change Cargo lints or `clippy.toml` | [references/lint.md](references/lint.md) |
+| A lint gets in the way, you want to disable one, or the repo's config lacks or contradicts a lint | [references/lint.md](references/lint.md) |
 
 ## A finished pass
 

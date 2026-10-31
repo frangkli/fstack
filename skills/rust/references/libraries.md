@@ -19,7 +19,7 @@ Before adding one, check in this order: std; a crate already in `Cargo.lock`; th
 
 - **In a workspace, declare each version once, in `[workspace.dependencies]`,** when a crate first uses it, and write `name = { workspace = true }` in the member crates; a single-crate repo declares it in its own `[dependencies]`. One version per dependency keeps the lockfile small; tools such as cargo-shear or cargo-machete reject an unused entry.
 - **Turn default features off only when the defaults pull in something unused** (a compression codec, TLS, a clock), and enable extra features in the crate that needs them.
-- **Features unify across one build.** A feature any crate in the build enables is on for every crate, so a missing feature can't keep an API out of library code. Keep it out with Clippy's `disallowed_methods` ([lint.md](lint.md)).
+- **Features unify across one build.** A feature any crate in the build enables is on for every crate, so a missing feature can't keep an API out of library code. Keep it out with Clippy's `disallowed_methods` (the readiness skill's [stacks/rust.md](../../readiness/stacks/rust.md)).
 
 ## thiserror and anyhow
 

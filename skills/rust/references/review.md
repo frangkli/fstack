@@ -1,6 +1,6 @@
 # Review and polish
 
-Read when reviewing Rust, or when polishing code that already works (a style pass, a review lane). A review checks SKILL.md's rules first, since those decide correctness; this file adds the idioms a style pass can find and fix, and the design-review checklist. Mechanical rules stay with Clippy ([lint.md](lint.md)).
+Read when reviewing Rust, or when polishing code that already works (a style pass, a review lane). A review checks SKILL.md's rules first, since those decide correctness; this file adds the idioms a style pass can find and fix, and the design-review checklist. Mechanical rules stay with Clippy (the readiness skill's [stacks/rust.md](../../readiness/stacks/rust.md)).
 
 Precedence is SKILL.md's: the repo's config and conventions win. Change idioms only in code the task touches; mention the rest in the handoff.
 

@@ -7,13 +7,16 @@ description: 'Review rules for TypeScript code: domain types, trust boundaries, 
 
 The rules a review checks TypeScript code against: domain types, absence, trust boundaries, errors, generics, functional core, async and security. Load this file to review, audit or polish code, and before changing tsconfig or lint setup. Implementation works from the repo's own conventions; these rules apply once the code works.
 
-- **For a style pass or a review:** read [references/review.md](references/review.md) for idioms, naming, modules, platform features and test style, In a polish or style pass, fix what it flags in the changed code; in a review lane, report it. The repo's workflow runs this pass once the code works.
+Where the guidance lives:
+
+- **This skill:** the review catalogue, in the rules below and the references the table under Precedence loads. For a style pass or a review, read [references/review.md](references/review.md) for idioms, naming, modules, platform features and test style. In a polish or style pass, fix what it flags in the changed code; in a review lane, report it. The repo's workflow runs this pass once the code works.
 - **Effect code:** if the package under review imports `effect`, read [references/effect.md](references/effect.md) first. Where it conflicts with this file, it wins.
-- **Mechanical rules** are the linter's and the compiler's: no `any` or `!`, handled index reads, floating promises, named exports, array and import style. [references/lint.md](references/lint.md) says when a rule may be disabled and what to do where the repo's config lacks one.
+- **The readiness skill's [stacks/typescript.md](../readiness/stacks/typescript.md):** the tsconfig flags and lint config that readiness offers and merges into a repo. They enforce the mechanical rules: no `any` or `!`, handled index reads, floating promises, named exports, array and import style. [references/lint.md](references/lint.md) says when a rule may be disabled and what to do where the repo's config lacks one.
+- **In the repo:** the root `STYLE.md` (naming, comment and structure rules), the TypeScript `STYLE.md` where the repo has one, and the tsconfig and lint config files.
 
 ## Precedence
 
-1. **The repo first.** Its tsconfig, lint config and AGENTS.md win over this skill. Match the conventions of the file and package you're in.
+1. **The repo first.** Its tsconfig, lint config, `STYLE.md` files and AGENTS.md win over this skill. Match the conventions of the file and package you're in.
 2. **Where the repo has no convention,** use the documented current practice for the TypeScript and library versions it pins (read `package.json` and the lockfile; read library docs at that version).
 3. **Where an existing pattern is clearly worse** than a rule here (a return-only generic, a guard that checks less than it claims, an unchecked cast at a boundary), use the better pattern in the code you're changing and say why in your handoff. Leave untouched code as it is and mention it instead.
 

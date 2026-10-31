@@ -6,7 +6,7 @@ Offer these as the recommended option when they fit the repo's stack and nothing
 
 - One `check` command per repo. When the repo mixes languages, a root `justfile` calls each stack's own runner.
 - Every linter, type checker and compiler starts at its strictest setting and is loosened per rule, each with a reason in the config. Examples: oxlint type-aware with type checking and warnings denied, TypeScript `strict`; ruff with all rules plus ty; clippy pedantic with `-D warnings` plus cargo-deny.
-- Per-stack config to offer and merge: TypeScript (tsconfig flags, Oxlint, Effect language service, React UI, pnpm) in [stacks/typescript.md](stacks/typescript.md).
+- Per-stack config to offer and merge: TypeScript (tsconfig flags, Oxlint, Effect language service, React UI, pnpm) in [stacks/typescript.md](stacks/typescript.md); Rust (Cargo lints, `clippy.toml`) in [stacks/rust.md](stacks/rust.md).
 - Unused code and dependencies: knip for TypeScript. Spelling: typos. Workflows: zizmor and actionlint. Secrets: gitleaks or betterleaks.
 - UI projects add accessibility lint and import-boundary rules; published packages add publint and attw.
 - Hooks: Vite+ hooks when the repo uses Vite+, otherwise lefthook (prek in Python-only repos). Fast staged checks and a secret scan on commit; CI is the real gate.
