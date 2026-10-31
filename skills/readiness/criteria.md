@@ -8,7 +8,7 @@ Keep the IDs stable: the next run matches verdicts by ID.
 
 ## Validation
 
-The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is per stack: [stacks/typescript.md](stacks/typescript.md).
+The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is per stack: [stacks/typescript.md](stacks/typescript.md) and [stacks/rust.md](stacks/rust.md).
 
 | ID | L | Scope | Passes when |
 |---|---|---|---|

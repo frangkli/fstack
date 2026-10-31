@@ -1,6 +1,6 @@
 # fstack
 
-What my agents know. 29 skills, from a one-line fix to a whole product.
+What my agents know. 30 skills, from a one-line fix to a whole product.
 
 ## Install
 
@@ -40,7 +40,8 @@ git clone https://github.com/frangkli/fstack && cp fstack/agents/*.md ~/.claude/
 | `adversarial-review` | Parallel review lanes on a plan or change, with every finding verified before it counts. |
 | `improve` | Review, verify and fix with a fixed round budget. |
 | `pr` | Phased commits, a readable PR body, and babysitting until CI and reviews are green. |
-| `typescript` | Coding and review rules for TypeScript repos. |
+| `typescript` | Review rules for TypeScript code. |
+| `rust` | Review rules for Rust code. |
 
 **Docs and writing**
 

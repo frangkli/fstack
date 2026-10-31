@@ -1,19 +1,23 @@
 ---
 name: typescript
-description: 'Coding rules for TypeScript repos. Load before your first edit to any .ts, .tsx, .mts or .cts file in a task (a feature, fix, refactor or test), even when the request never says "TypeScript", e.g. "add an env var to the CLI". Also load when reviewing or polishing TypeScript code (then read its review reference too), and before changing tsconfig or lint setup.'
+description: 'Review rules for TypeScript code: domain types, trust boundaries, errors, generics, React and advanced type patterns. Load when reviewing, auditing or polishing TypeScript (a PR review, a design review of planned types, a final style pass, a design-and-style review lane), even when the request never says "TypeScript" but the change has .ts, .tsx, .mts or .cts files, and before changing tsconfig or lint setup, e.g. "review this PR" or "make the Oxlint config stricter". Not for writing new code or making a fix: an agent asked to "add a date filter to the orders table" or "fix the null check in the cart" works from the repo''s own conventions and leaves these rules to the review.'
 ---
 
 # TypeScript
 
-The rules that shape the design and correctness of TypeScript code: domain types, absence, trust boundaries, errors, generics, functional core, async and security. Load this file before implementing.
+The rules a review checks TypeScript code against: domain types, absence, trust boundaries, errors, generics, functional core, async and security. Load this file to review, audit or polish code, and before changing tsconfig or lint setup. Implementation works from the repo's own conventions; these rules apply once the code works.
 
-- **Once the code works, and when reviewing:** read [references/review.md](references/review.md) for idioms, naming, modules, platform features and test style, and fix what it flags in the code you changed before handing off. This style pass is part of every implementation task, however small.
-- **Effect code:** if the package you're changing imports `effect`, read [references/effect.md](references/effect.md) before writing code. Where it conflicts with this file, it wins.
-- **Mechanical rules** are the linter's and the compiler's: no `any` or `!`, handled index reads, floating promises, named exports, array and import style. [references/lint.md](references/lint.md) says when a rule may be disabled and what to do where the repo's config lacks one.
+Where the guidance lives:
+
+- **This skill:** the review catalogue, in the rules below and the references the table under Precedence loads, plus the tsconfig baseline in [references/tsconfig.md](references/tsconfig.md). For a style pass or a review, read [references/review.md](references/review.md) for idioms, naming, modules, platform features and test style. In a polish or style pass, fix what it flags in the changed code; in a review lane, report it. The repo's workflow runs this pass once the code works.
+- **The readiness skill's [stacks/typescript.md](../readiness/stacks/typescript.md):** the lint config, and the compiler flags that replace lint rules, that readiness offers and merges into a repo. Once merged into the repo's config, they enforce the mechanical rules: no `any` or `!`, handled index reads, floating promises, named exports, array and import style. [references/lint.md](references/lint.md) says when a rule may be disabled and what to do where the repo's config lacks one.
+- **In the repo:** where the repo has them, a root `STYLE.md` for the naming, comment and structure rules every language shares and a TypeScript `STYLE.md`; and the tsconfig and lint config files.
+
+**Effect code:** if the package under review imports `effect`, read [references/effect.md](references/effect.md) first. Where it conflicts with this file, it wins.
 
 ## Precedence
 
-1. **The repo first.** Its tsconfig, lint config and AGENTS.md win over this skill. Match the conventions of the file and package you're in.
+1. **The repo first.** Its tsconfig, lint config, `STYLE.md` files and AGENTS.md win over this skill. Match the conventions of the file and package you're in.
 2. **Where the repo has no convention,** use the documented current practice for the TypeScript and library versions it pins (read `package.json` and the lockfile; read library docs at that version).
 3. **Where an existing pattern is clearly worse** than a rule here (a return-only generic, a guard that checks less than it claims, an unchecked cast at a boundary), use the better pattern in the code you're changing and say why in your handoff. Leave untouched code as it is and mention it instead.
 
@@ -21,19 +25,19 @@ Load a reference only when its case applies:
 
 | Case | Read |
 |---|---|
-| Writing a generic, brand, correlated union, assertion function, template-literal, conditional or mapped type, a type test, or chasing slow type checks | [references/patterns.md](references/patterns.md) |
+| The code has or needs a generic, brand, correlated union, labeled or non-empty tuple, assertion function, template-literal, conditional or mapped type, typestate, command type, capability parameter or type test, or chasing slow type checks | [references/patterns.md](references/patterns.md) |
 | Creating or changing a tsconfig, module mode or import extensions | [references/tsconfig.md](references/tsconfig.md) |
 | A lint rule or flag gets in the way, you want to disable one, or the repo's config lacks or contradicts a rule | [references/lint.md](references/lint.md) |
 | The code is React (`.tsx` components, hooks, props) | [references/react.md](references/react.md) |
 | The code handles untrusted input, secrets, auth, tokens or user-controlled keys | [references/security.md](references/security.md) |
 
-## Done means
+## A finished pass
 
-- **Checks pass.** Take the commands from the repo's `GATES.md`; without one, from AGENTS.md, the package scripts and the lint config. While iterating, run the cheapest command that type-checks and lints the files you touched. When a shared type or export changed, also check the packages that consume it. Run the full readiness command only at ship points. Show the output: zero errors, zero warnings.
-- **No silent escape hatches.** Every new `any`, `as`, `!`, `@ts-expect-error` or lint-disable comment meets the rules under Escape hatches, and your handoff lists each one with its reason.
-- **No new suppressions to get green.** If a check fails, fix the types; never loosen a compiler flag or lint rule to pass.
-- **Style pass done.** After the code works, re-read the diff against [references/review.md](references/review.md) (and [references/effect-review.md](references/effect-review.md) in Effect code) and fix what it flags.
-- **Every advanced type pays for itself.** Each brand, generic, conditional or mapped type you add removes a cast, a `!`, a duplicated declaration or a runtime check, or turns a future mistake into a compile error. Name that payoff in your handoff; where you can't, use the plain type.
+- **Checks pass on the change.** Run the repo's commands (its `GATES.md`; without one, AGENTS.md, the package scripts and the lint config) over the changed packages and the packages that consume a changed shared type or export. Show the output: zero errors, zero warnings.
+- **Every escape hatch in the diff is accounted for.** Each new `any`, `as`, `!`, `@ts-expect-error` or lint-disable comment meets the rules under Escape hatches and carries its reason in a comment; one without a reason is a finding.
+- **No suppression bought green.** A loosened compiler flag or lint rule in the diff is a finding: fix the types instead.
+- **The style pass ran.** The diff was read against [references/review.md](references/review.md) (and [references/effect-review.md](references/effect-review.md) in Effect code).
+- **Every advanced type pays for itself.** Each brand, generic, conditional or mapped type in the diff removes a cast, a `!`, a duplicated declaration or a runtime check, or turns a future mistake into a compile error. One whose payoff nobody can name becomes the plain type.
 
 ## Model the domain
 
@@ -41,12 +45,12 @@ Load a reference only when its case applies:
   ```ts
   // Before: { loading: boolean; data?: User; error?: Error }
   type UserState =
-    | { readonly kind: "loading" }
-    | { readonly kind: "loaded"; readonly user: User }
-    | { readonly kind: "failed"; readonly error: Error };
-  function render(state: Extract<UserState, { kind: "loaded" }>) { /* state.user is there */ }
+    | { readonly status: "loading" }
+    | { readonly status: "loaded"; readonly user: User }
+    | { readonly status: "failed"; readonly error: Error };
+  function render(state: Extract<UserState, { status: "loaded" }>) { /* state.user is there */ }
   ```
-- **Discriminant name:** the codebase's. In new code, `kind` for domain variants, `status` for lifecycle states, `_tag` in Effect code.
+- **Discriminant name:** the codebase's, and for data from an API the wire format's own field. In new code, name it after the distinction it draws (`status` for a lifecycle, `outcome` for a result, `channel` for a delivery route), so the field keeps its domain meaning; use `kind` only when no domain word names the distinction, `type` for reducer actions, and `_tag` in Effect code.
 - **Build the shape so the bad value can't exist:** `[T, ...T[]]` for a non-empty list, `start` plus `duration` instead of two dates that must be ordered.
 - **Stop at the simplest total type.** Keep `T[]` while every operation on it works for all values. Strengthen a type only where the loose one forces a `!`, a cast or a "can't happen" throw.
 - **One canonical value, types derived from it.** When a schema, generated client, OpenAPI or protobuf definition, or DB schema owns a shape, infer the type from it. When the set of values must exist at runtime, write it once `as const`, check it with `satisfies`, and derive the union, so adding an entry updates the type:
@@ -124,13 +128,13 @@ Each empty state gets one spelling, so readers can tell "not provided" from "pro
 
 Split by kind of failure, and keep one style per module:
 
-1. **Bugs, broken invariants and infrastructure faults throw** an `Error` subclass, with the original as `cause`. Let it reach the one boundary handler (the request handler, job runner or CLI entry point) that logs and responds.
+1. **Bugs, broken invariants and infrastructure faults throw** an `Error`, with the original as `cause`. Subclass `Error` only when a caller checks for it with `instanceof`; a subclass nobody checks adds a type and nothing else. Let it reach the one boundary handler (the request handler, job runner or CLI entry point) that logs and responds.
 2. **Expected outcomes the caller must branch on** (not found, conflict, validation failed, quota reached) are part of the return type, as a discriminated union named for the domain. Use the repo's existing `Result` type if it has one; don't add a result library to a repo that lacks one.
    ```ts
    type ReserveResult =
-     | { kind: "reserved"; reservation: Reservation }
-     | { kind: "sold-out" }
-     | { kind: "over-limit"; limit: number };
+     | { outcome: "reserved"; reservation: Reservation }
+     | { outcome: "sold-out" }
+     | { outcome: "over-limit"; limit: number };
    ```
 3. **In Effect code,** expected failures are tagged errors in the error channel and bugs are defects. See [references/effect.md](references/effect.md).
 
@@ -148,7 +152,7 @@ Split by kind of failure, and keep one style per module:
   }
   get(user, "email"); // string
   ```
-  When a handler, payload or result depends on a discriminant (`type`, `kind`, an event name), key them all from one map type so the compiler checks the pairing: [references/patterns.md](references/patterns.md), correlated unions.
+  When a handler, payload or result depends on a discriminant (an event name, a `status`), key them all from one map type so the compiler checks the pairing: [references/patterns.md](references/patterns.md), correlated unions.
 - **Design generics for inference at call sites.** If callers always pass type arguments, change the design. A `const` type parameter keeps literal types without `as const` at the call site; `NoInfer<T>` checks an argument against `T` without letting it widen `T`:
   ```ts
   function machine<const S extends string>(states: readonly S[], initial: NoInfer<S>) { /* … */ }

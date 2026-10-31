@@ -22,11 +22,47 @@ Several boolean props that combine into states (`isPrimary`, `isDanger`, `isGhos
 
 - Props are a plain `interface` on a function component. No `React.FC`.
 - React 19: `ref` is an ordinary prop; no `forwardRef`.
-- Derive props from what you wrap: `ComponentProps<typeof Button>`, `ComponentPropsWithoutRef<"button">`, and `Parameters<typeof handler>[0]` for callback arguments.
+- Derive props from what you wrap: `ComponentProps<typeof Button>`, `ComponentProps<"button">` (which includes React 19's `ref` prop), and `Parameters<typeof handler>[0]` for callback arguments.
 - `useState<T>()` with an explicit type when the initial value is `null`, an empty collection, or a literal that inference would widen.
 - Pass setters as `Dispatch<SetStateAction<T>>`, not a hand-written `(value: T) => void`.
 - Reducer actions are a discriminated union, handled by an exhaustive `switch`.
 - Event handlers use React's event types (`ChangeEvent<HTMLInputElement>`), or let the JSX attribute type the inline handler.
+
+## Patterns
+
+These are for components whose callers would otherwise get something wrong; most screens need none of them.
+
+| Pattern | Use it when | Skip it when |
+|---|---|---|
+| Discriminated props for modes | modes need different props, so `mode: "edit"` can't arrive without its record | every mode takes the same props: one `variant` literal prop |
+| `prop?: never` on the other branch | two prop sets are each valid but meaningless together (`href` or `onAction`) | more than two sets, or the branches share little: write separate components |
+| Controlled and uncontrolled props as a union | a reusable input must let its caller either own the value or leave it to the input | the app owns the value at every call site: controlled only |
+| Generic component (`Picker<T>`) | items and callbacks must keep the item type, as in tables, lists and selects over several row types | there is one item type: write it concretely |
+| `ComponentProps<"button">` passthrough (React 19, where `ref` is a prop) | a component wraps one native element and should accept all its attributes | the component is more than a thin wrapper |
+| `ComponentProps<typeof X>` for a wrapper's props | a wrapper tracks another component's API on purpose | the wrapper offers a smaller API deliberately |
+| Named JSX slots (`navigation={<Nav />}`) | a layout composes parts its caller owns | one region: use `children` |
+| Render prop (a function as `children`) | the caller needs data or actions only the component has | the composition is static: plain `children` |
+| Compound components sharing a context | a family of coordinated parts that callers arrange (`Tabs.List`, `Tabs.Panel`) | a simple wrapper with one layout |
+| Reducer with an action union | three or more related transitions must keep one invariant | the fields change independently: `useState` per field |
+| Hook returning semantic actions (`addItem`, `clear`) | callers must not be able to break the state's invariant with a raw setter | simple local state: return the setter |
+| Separate state and dispatch contexts | many consumers only dispatch and shouldn't re-render on state changes | few consumers |
+| `useEffectEvent` (React 19.2) | an Effect must read the latest props or state without re-running when they change | anything else; never as a general event handler or passed to another component |
+| `useImperativeHandle` | an action can't be expressed as a prop: focus, scroll, select text | a prop can say it: `isOpen`, not `{ open, close }` |
+
+```tsx
+// Discriminated props: edit mode can't render without the record it edits.
+type InvoiceFormProps =
+  | { mode: "create"; onCreate: (input: NewInvoice) => void }
+  | { mode: "edit"; invoice: Invoice; onSave: (input: InvoicePatch) => void };
+
+// Generic component: onSelect receives the caller's row type, not unknown.
+interface PickerProps<T> {
+  items: readonly T[];
+  keyOf: (item: T) => string;
+  onSelect: (item: T) => void;
+}
+export function Picker<T>({ items, keyOf, onSelect }: PickerProps<T>) { /* … */ }
+```
 
 ## Imports
 

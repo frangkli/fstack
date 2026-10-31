@@ -46,8 +46,7 @@ Categories: turn on `correctness`, `suspicious` and `perf` (Effect's own set) an
     "typescript/prefer-promise-reject-errors": "error",
     "typescript/strict-boolean-expressions": "error",
     "typescript/switch-exhaustiveness-check": "error",
-    "typescript/ban-ts-comment": "error",
-    "typescript/prefer-ts-expect-error": "error",
+    "typescript/ban-ts-comment": ["error", { "minimumDescriptionLength": 10 }],
     "eqeqeq": ["error", "always", { "null": "ignore" }], // `x != null` checks null and undefined together
     "radix": "error",
     "no-prototype-builtins": "error",
@@ -127,7 +126,12 @@ For an app that renders React or other JSX.
 ```jsonc
 {
   "settings": { "jsx-a11y": { "components": { "Button": "button", "Link": "a", "Image": "img" }, "polymorphicPropName": "render" } },
-  "overrides": [{ "files": ["src/**/*.tsx"], "plugins": ["react", "jsx-a11y"] }]
+  "overrides": [{
+    "files": ["src/**/*.{ts,tsx}"],
+    "plugins": ["react", "jsx-a11y"],
+    // the automatic JSX runtime (`jsx: "react-jsx"`) needs no React import in scope
+    "rules": { "react/react-in-jsx-scope": "off" }
+  }]
 }
 ```
 
@@ -189,7 +193,7 @@ The skill omits these rules and relies on this config. **T** marks a type-aware 
 | No `for…in` over arrays; `for…of` over index loops | `typescript/no-for-in-array` (T); `typescript/prefer-for-of` |
 | Promises handled; `void` marks fire-and-forget; top-level `await` over module-level `.then` | `typescript/no-floating-promises`, `no-misused-promises`, `await-thenable`, `return-await` (T); `unicorn/prefer-top-level-await` |
 | Throw and reject `Error`s with a message; catch callbacks take `unknown` | `typescript/only-throw-error`, `prefer-promise-reject-errors`, `use-unknown-in-catch-callback-variable` (T); `preserve-caught-error`; `unicorn/throw-new-error`, `unicorn/error-message` |
-| `@ts-expect-error` with a description | `typescript/ban-ts-comment`, `prefer-ts-expect-error` |
+| `@ts-expect-error` with a description | `typescript/ban-ts-comment` with `minimumDescriptionLength: 10` |
 | Separate `import type`; one import per module; imports first; no `export let` | `typescript/consistent-type-imports`, `import/consistent-type-specifier-style`, `import/no-duplicates`; `import/first`; `import/no-mutable-exports` |
 | `const`; no parameter mutation | `prefer-const`; `no-param-reassign` with `props: true`; `typescript/prefer-readonly` (T) for class fields |
 | Logging, cloning, unused code | `no-console`; `unicorn/prefer-structured-clone`; `no-unused-vars` plus knip |
