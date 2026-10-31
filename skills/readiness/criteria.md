@@ -55,7 +55,7 @@ The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is per stack: 
 | DOC-6 | 3 | repo | Both harnesses reach the instructions and project skills: Claude reads `AGENTS.md` (directly, or through a `CLAUDE.md` link or import) and `.claude/skills` resolves to `.agents/skills` |
 | DOC-7 | 3 | repo | `GLOSSARY.md` lists the project's domain terms, one line each, every term appears in the code or docs, and `AGENTS.md` links it |
 | DOC-8 | 3 | app | For a React or JSX UI: `PRODUCT.md` exists, and `DESIGN.md` exists once the UI has a visual system in code |
-| DOC-9 | 3 | repo | A root `STYLE.md` holds the repo's naming, comment and structure rules plus each language's never list, and `AGENTS.md` points to it |
+| DOC-9 | 3 | repo | A root `STYLE.md` holds the repo's naming, comment and structure rules, plus the never list from readiness's `stacks/` for each language the repo uses that has one, and `AGENTS.md` links it |
 
 ## Dev environment
 

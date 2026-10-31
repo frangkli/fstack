@@ -22,7 +22,7 @@ Read before judging. Record:
 
 - **Stacks:** languages, package managers, toolchain pins.
 - **Apps:** each independently run or deployed unit (web app, API, worker, CLI, published package) with its surface (UI, HTTP, CLI, library), its start command and where it deploys. App-scoped criteria are scored once per app.
-- **Existing tools:** checkers, test runners, hooks, CI system, review bots, secrets handling, observability backends, agent docs (`AGENTS.md`, `GATES.md`, `GLOSSARY.md`, `t3.json`, the `verify` skill under `.agents/skills/`).
+- **Existing tools:** checkers, test runners, hooks, CI system, review bots, secrets handling, observability backends, agent docs (`AGENTS.md`, `GATES.md`, `GLOSSARY.md`, `STYLE.md` or another style document, `t3.json`, the `verify` skill under `.agents/skills/`).
 - **Conditions that make criteria apply:** per app, whether it renders React or JSX, uses shadcn/ui (`components.json`), is a shared component library, calls a model (an LLM SDK in its dependencies), and has users or runs in production (ask the user when the repo doesn't show it).
 
 Done when every app has a surface, a start command (or "none found"), its list of checkers and its conditions.

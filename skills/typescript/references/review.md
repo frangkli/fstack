@@ -21,7 +21,7 @@ Where the repo has its own convention, it wins. The recommended lint config also
 
 ## Naming
 
-- Booleans and predicates read as `isX` or `hasX`.
+- Booleans and predicates read as questions: `isX`, `hasX` or `canX`.
 - A type for one value is singular (`Route` for a union of routes).
 - Names come from the domain the code serves, matching the words the repo already uses for the same thing.
 
