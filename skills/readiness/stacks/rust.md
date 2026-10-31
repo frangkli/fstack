@@ -1,6 +1,22 @@
 # Rust stack
 
-The recommended lint setup for a Rust repo: the default to offer for VAL-1 and VAL-2 when the repo has no config, and the settings to merge into an existing config. It matches the `rust` skill, which leaves every rule below to the tools. Confirm each lint name against the repo's pinned toolchain, and keep a repo's own lint set when it already does the job.
+The recommended lint setup for a Rust repo: the default to offer for VAL-1 and VAL-2 when the repo has no config, and the settings to merge into an existing config. It also holds the never list readiness copies into the repo's `STYLE.md`. It matches the `rust` skill, which leaves every lint below to the tools. Confirm each lint name against the repo's pinned toolchain, and keep a repo's own lint set when it already does the job.
+
+## Never
+
+Mistakes that are costly once shipped and that the lints below don't catch. readiness copies this list into the repo's root `STYLE.md` (DOC-9), so implementers see it before the review does; the `rust` skill gives the reasons.
+
+- Never panic on input (files, network payloads, config, requests, CLI arguments, env vars): return an error. `.expect("why this cannot fail")` is for a real invariant only.
+- Never pass input inward unparsed: parse it once, where it enters, into types that can't hold invalid values.
+- Never format a value into SQL text: bind every value.
+- Never key an `FxHashMap` with values an attacker chooses: it has no protection against hash flooding, so use std's `HashMap` there.
+- Never create an unbounded channel or queue: bound it, and decide whether a full one waits or drops and counts.
+- Never run blocking or CPU-heavy work on the async runtime: move it to `spawn_blocking`.
+- Never spawn a long-running task that can't be stopped: each one listens to a `CancellationToken`.
+- Never retry an operation that isn't idempotent, and give a retried write a dedup token derived from its content.
+- Never generate a random or time-based id where a rerun must reproduce it: derive it from the content.
+- Never accept unknown keys in a config type: put `#[serde(deny_unknown_fields)]` on it (but not on types that read upstream data).
+- Never write a bare `#[instrument]`: it records every argument with `Debug`, secrets included. Write `skip_all` and name the fields.
 
 ## Cargo lints
 
