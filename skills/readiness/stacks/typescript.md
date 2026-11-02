@@ -11,7 +11,7 @@ Mistakes that are costly once shipped and that the lints below don't catch. read
 - Never swallow an error: `catch { return [] }` and `?? []` on required data hide the failure. Catch only to recover, to translate at a boundary or to clean up.
 - Never make an outbound call without a timeout or the caller's `AbortSignal` (join them with `AbortSignal.any`), and never retry an operation that isn't idempotent.
 - Never write `target[key] = value` with a key from input: store user-keyed data in a `Map`.
-- Never compare a secret, token or MAC with `===`: use a constant-time comparison (`crypto.timingSafeEqual`).
+- Never compare a secret, token or MAC with `===`: compare fixed-length digests, such as HMACs of both values, with a constant-time comparison, so a length difference neither leaks nor throws. Node's `crypto.timingSafeEqual` is one, and takes only equal-length buffers.
 - Never use `Math.random` for tokens, ids or nonces: use `crypto.randomUUID()` or `crypto.getRandomValues()`.
 - Never read an id above 2^53 as a number: keep it a string or a `BigInt`.
 
