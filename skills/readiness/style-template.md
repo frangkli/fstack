@@ -4,7 +4,7 @@ The naming, comment and structure rules no formatter, linter or compiler checks.
 
 | Language | Style file | Lint config | Reviewed with |
 |---|---|---|---|
-| <Language> | `<path>/STYLE.md` | `<lint and compiler config files>` | the `<language>` skill |
+| <Language> | `<path>/STYLE.md` | `<lint and compiler config files>` | the `<language>` skill (`.agents/skills/<language>/`) |
 
 ## Naming
 
