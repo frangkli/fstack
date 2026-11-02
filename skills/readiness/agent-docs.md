@@ -45,6 +45,15 @@ Write [style-template.md](style-template.md) to the repo root as `STYLE.md`. Eac
 - Link the files from the root `AGENTS.md` in one line that names each language's file: "Read `STYLE.md`, plus `crates/STYLE.md` before Rust work or `web/STYLE.md` before TypeScript work."
 - When the repo already has a style document, merge the template into it instead: keep its rules, add the missing ones, and name each conflict in the hand-off for the owner to decide. Move its shared rules to the root `STYLE.md` and its language rules to that language's `STYLE.md`.
 
+## Skill copies
+
+The `rust` and `typescript` skills hold the general review rules that each language's `STYLE.md` leaves out. A copy in the repo keeps those rules available to a teammate without fstack installed and to tools that read only the repo (DOC-10).
+
+- Clone `https://github.com/frangkli/fstack` to a scratch folder and record its `main` head commit. For each language in the `STYLE.md` index that has an fstack skill, copy `skills/<lang>/` verbatim into `.agents/skills/<lang>/` and `.claude/skills/<lang>/` (one copy when `.claude/skills` links to `.agents/skills`), and add fstack's root `LICENSE` to each copy.
+- Add one line to `AGENTS.md`: "`.agents/skills/<lang>/` and `.claude/skills/<lang>/` are copies of fstack's skills at commit `<sha>`. Never edit them by hand. To refresh, replace both folders with fstack's, keep each `LICENSE`, and update this commit. Where fstack is also installed for the user, Claude Code uses the user's copy and Codex lists both." This line is a refresh rule, not a list of installed skills (DOC-3).
+- Exclude both folders from every hook and checker that rewrites or flags files: spell checkers, end-of-file and whitespace fixers, formatters and Markdown linters (in `.pre-commit-config.yaml`, `prek.toml` or the tool's own config).
+- Prove it: run the repo's hooks on all files and see no change in the copies, then run `diff -r -x LICENSE <clone>/skills/<lang> <copy>` for each copy and see exit 0.
+
 ## GLOSSARY.md
 
 ```markdown

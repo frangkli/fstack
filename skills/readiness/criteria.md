@@ -56,6 +56,7 @@ The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is per stack: 
 | DOC-7 | 3 | repo | `GLOSSARY.md` lists the project's domain terms, one line each, every term appears in the code or docs, and `AGENTS.md` links it |
 | DOC-8 | 3 | app | For a React or JSX UI: `PRODUCT.md` exists, and `DESIGN.md` exists once the UI has a visual system in code |
 | DOC-9 | 3 | repo | A root `STYLE.md` holds the naming, comment and structure rules and an index; each language with a `stacks/` never list carries it in a `STYLE.md` beside its code (the root one in a single-language repo); `AGENTS.md` links the root file and names each language's file |
+| DOC-10 | 3 | repo | Each language with an fstack review skill (`rust`, `typescript`) has a copy of it in `.agents/skills/<lang>/` and `.claude/skills/<lang>/` with fstack's `LICENSE`; `AGENTS.md` names the fstack commit and the refresh rule; each copy, minus `LICENSE`, matches `skills/<lang>/` at that commit (`diff -r` exits 0); and the repo's hooks leave the copies unchanged |
 
 ## Dev environment
 
