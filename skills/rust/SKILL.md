@@ -115,7 +115,7 @@ Load a reference only when its case applies:
 
 ## Concurrency and async
 
-- **Keep blocking work off the async runtime.** Parsing a large file, compressing a batch or other CPU-heavy work runs in `spawn_blocking`; file and network I/O use the runtime's async APIs.
+- **Keep blocking work off the async runtime, and pick the tool by how long the work runs.** File and network I/O use the runtime's async APIs. A short, bounded blocking call, such as hashing one file, runs in `spawn_blocking`. Its pool grows to 512 threads and then queues without limit, and `tokio::fs` calls wait in that same queue, so limit CPU-heavy parallelism: take a `Semaphore` permit before each `spawn_blocking`, or give data-parallel work, such as parsing every file of a batch import, to rayon. A worker that runs for the whole life of the program gets its own thread from `std::thread::spawn`. A started `spawn_blocking` task can't be aborted and runtime shutdown waits for it, so a long CPU loop checks the `CancellationToken` between chunks.
 - **Bound every channel and queue, and decide what happens when it is full:** wait (backpressure) or drop and count. An unbounded channel turns a slow consumer into memory growth.
 - **Hold no `std::sync::Mutex` guard across an `.await`.** Share read-only inputs as `Arc<T>`; give mutable state one owning task that others message.
 - **Make every task cancellable.** Long loops check a `CancellationToken` or sit in `select!` with it, and a cancelled task leaves its saved progress (a cursor, an offset) at the last acknowledged write, so a restart neither loses nor repeats work.
