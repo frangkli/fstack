@@ -82,7 +82,7 @@ Before adding one, check in this order: std; a crate already in `Cargo.lock`; th
 ## tokio and tokio-util
 
 - **tokio** when the program waits on many sockets, files, timers or child processes at once. Each crate enables only the features it uses (`rt-multi-thread`, `macros`, `net`, `fs`, `io-util`, `time`, `sync`, `signal`, `process`). A CLI that does one thing at a time needs no runtime: std's blocking I/O is simpler.
-- **tokio-util** for shutdown: a `CancellationToken` that every long task listens to, and a `TaskTracker` to wait for them all.
+- **tokio-util** for shutdown: a `CancellationToken` that every long task listens to, and a `TaskTracker` to wait for them all. `TaskTracker` only waits until every task has exited; when the caller needs each task's result as it finishes, or must stop the rest on the first error or panic, use `tokio::task::JoinSet`, whose `join_next` returns tasks in finishing order and whose drop aborts the tasks still running.
 
   ```rust
   let token = CancellationToken::new();

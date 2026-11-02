@@ -20,7 +20,7 @@ Read when the code handles untrusted input, secrets, auth, tokens or user-contro
 
 ## Parsing numbers
 
-- `parseInt` stops at the first non-digit (`"12abc"` gives 12) and reads a `0x` prefix as hex. Use `Number(s)` and reject `NaN` and non-integers, or `parseInt(s, 10)` when a trailing suffix is expected.
+- `parseInt` stops at the first non-digit (`"12abc"` gives 12) and reads a `0x` prefix as hex. `Number` has the opposite gap: `Number("")`, `Number(" ")` and `Number(null)` all return `0`, which passes `Number.isInteger`, so a cleared settings-form field or a missing `localStorage` key (`getItem` returns `null`) reads as a real 0. Reject blank and missing input first: test the string against `/^-?\d+$/` (or a schema's string regex followed by a transform), then call `Number(s)`. Use `parseInt(s, 10)` when a trailing suffix is expected.
 - JSON numbers above 2^53 lose precision silently in `JSON.parse`. Carry large ids as strings, or parse them with `BigInt`.
 
 ## Regular expressions

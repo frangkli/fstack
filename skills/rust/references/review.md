@@ -36,7 +36,7 @@ The repo's own naming rules come first. These are the Rust-specific ones:
 - **Emit `tracing` spans at phase boundaries in library crates:** loading, parsing, each request, each job, each query. Only the binary depends on `tracing-subscriber`, writes to stderr and reads `RUST_LOG`; a library that installs a subscriber takes the choice away from its caller.
 - **Give spans static names and put identifiers in fields.** Use `import` with `source = %name`, never `format!("import {name}")` as the name, so spans group and filter by name.
 - **Record data as structured fields and keep the message a fixed phrase:** `debug!(queue = %name, job_count = n, "batch claimed")`. Fields can be queried; text in a message can't.
-- **Write `#[instrument(level = "debug", skip_all, fields(..))]`.** A bare `#[instrument]` records every argument with `Debug`, which can dump whole request bodies and secrets.
+- **Write `#[instrument(skip_all, fields(..))]`, at the default `info` level on phase and request boundaries and at `level = "debug"` for detail inside them.** A bare `#[instrument]` records every argument with `Debug`, which can dump whole request bodies and secrets. The usual production filter, `RUST_LOG=info`, disables `debug` spans, so a `warn!` or `error!` inside a phase whose span is at `debug` prints without that phase's fields.
 - **Use `debug` and `trace` for events in library crates.** A problem the user must see reaches them as data (a returned error, a skipped count, a health report), never only as a log line.
 - **Keep disabled events cheap.** Put no `format!`, `to_string()` or `collect()` in event arguments. A spawned task doesn't inherit the current span: attach it with `.instrument(span)`.
 

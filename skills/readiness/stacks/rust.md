@@ -11,7 +11,7 @@ Mistakes that are costly once shipped and that the lints below don't catch. read
 - Never format a value into SQL text: bind every value.
 - Never key an `FxHashMap` with values an attacker chooses: it has no protection against hash flooding, so use std's `HashMap` there.
 - Never create an unbounded channel or queue: bound it, and decide whether a full one waits or drops and counts.
-- Never run blocking or CPU-heavy work on the async runtime: do file and network I/O through the runtime's async APIs, and move CPU-heavy work to `spawn_blocking`.
+- Never run blocking or CPU-heavy work on the async runtime: do file and network I/O through the runtime's async APIs, use `spawn_blocking` only for short, bounded blocking calls, limit CPU-heavy parallelism with a `Semaphore` or rayon, and give a worker that runs the whole time its own thread.
 - Never spawn a long-running task that can't be stopped: each one listens to a `CancellationToken`.
 - Never retry an operation that isn't idempotent. To make a retried write idempotent, give it a dedup key derived from its content.
 - Never accept unknown keys in a config or spec type: put `#[serde(deny_unknown_fields)]` on each, never together with `flatten`. Leave it off types that read upstream data (events, logs, third-party payloads).

@@ -180,4 +180,4 @@ Details and examples: [references/security.md](references/security.md).
 - User-controlled keys go into a `Map`, or are checked with `Object.hasOwn`; never merge parsed input into plain objects with `obj[key] =`.
 - Secrets, tokens and MACs are compared with a constant-time comparison.
 - Security-relevant randomness comes from `crypto.randomUUID` or `crypto.getRandomValues`.
-- Numbers from strings parse with `Number()` plus a `Number.isNaN`/`Number.isInteger` check; ids above 2^53 stay strings or `BigInt`.
+- Numbers from strings are checked against a pattern such as `/^-?\d+$/` before `Number()`, because `Number("")`, `Number(" ")` and `Number(null)` all return `0`; ids above 2^53 stay strings or `BigInt`.
