@@ -1,97 +1,43 @@
 # Fixing agent docs and gates
 
-For gaps in the agent docs and build-and-checks areas. Read `writing-for-agents` before writing any of these files.
+For gaps in the agent docs and build-and-checks areas. Read `writing-for-agents` before writing any of these files. The files start from [templates/](templates/); [manifest.md](manifest.md) says where each lands.
 
 ## AGENTS.md
 
+Start from [templates/common/AGENTS.md](templates/common/AGENTS.md).
+
 - One root file under ~60 lines, never over 100. Add an app-level `AGENTS.md` only where that app's commands differ, shorter than the root.
-- Tables for commands, file-scoped first: test one file, lint one file, type-check one package. The full check appears once, as a pointer to `GATES.md`.
-- Pointers, not copies: one line each to `GATES.md`, `STYLE.md`, `REVIEW_RULES.md`, `GLOSSARY.md`, the `verify` skill, setup docs, architecture and security docs that exist. Repo-relative paths only.
+- Pointers, not copies: one line each to `STYLE.md`, `TESTING.md`, `REVIEW_RULES.md`, `GLOSSARY.md`, the `verify` skill, the design doc, setup docs, architecture and security docs that exist. Repo-relative paths only.
+- The line that tells every agent to read the root `STYLE.md` and the language's style file before implementing and before any style review, and to name both in every brief for a subagent or a review lane (DOC-9).
 - Cache only what an agent can't find by looking: unwritten conventions, the reason behind a surprising choice, gotchas. Leave out linter settings, installed skills, slogans and commit attribution.
+- Where the repo has a design source-of-truth doc, the line that a changed decision updates it with a dated entry in its decision log.
 - Claude reads `AGENTS.md` when `CLAUDE.md` links to it (`ln -s AGENTS.md CLAUDE.md`) or imports it (`@AGENTS.md`); add one only if the repo lacks both. Project skills live in `.agents/skills/`, with `.claude/skills` as a link to it.
 - A tool writes into `AGENTS.md` or `CLAUDE.md` only when the owner opts in, and only between its own markers (`<!-- <tool>:start -->` / `<!-- <tool>:end -->`), so it can update or remove its block without touching hand-written text. Flag tool-written text outside a fence.
 - Before finishing, run every command in the file and resolve every path.
 
-## GATES.md
+## The commands table
 
-```markdown
-# Gates
+The commands table lives in `AGENTS.md`, with the columns `Command | Covers | Time`, file-scoped rows first (test one file, lint one file, check one package) and the full check last, followed by the line on running the cheapest covering check while iterating and the full check only at ship points, and the recipe mapping (`setup`, `teardown`, `check`, `fix`, `test <path>`, `dev`). A repo that already keeps these in `GATES.md` passes BLD-3 and DOC-3 as it is; don't move them.
 
-| Command | Covers | Time |
-|---|---|---|
-| `<lint one file>` | <what it checks> | ~2 s |
-| `<test one package>` | <which tests> | ~20 s |
-| `<full check>` | lint, types, all tests, build | ~6 min |
+Times come from runs you measured on this machine, rounded. Remove any line that asks for the full check before every hand-off.
 
-| Recipe | Command |
-|---|---|
-| `setup` / `teardown` | `<runner> run setup` / `<runner> run teardown` |
-| `check` / `fix` | `<runner> run check` / `<runner> run fix` |
-| `test <path>` | `<runner> test <path>` |
-| `dev` | `<runner> run dev` |
+## STYLE.md and TESTING.md
 
-While iterating, run the cheapest command that covers your change. When a unit of work is done, check the packages it touched. Run the full check only at ship points: before opening or updating a PR, once on the integrated head, and before merge.
-```
+Write them at setup from the templates, as [SKILL.md](SKILL.md) step 6 describes:
 
-Times come from runs you measured on this machine, rounded. Remove any `AGENTS.md` line that asks for the full check before every hand-off.
+- The root `STYLE.md` is [templates/common/STYLE.md](templates/common/STYLE.md), with its index filled: one row per language the repo uses, naming its style file and its lint and compiler config files. `TESTING.md` is [templates/common/TESTING.md](templates/common/TESTING.md).
+- Each language's style file is the language's `STYLE.md`, then `libraries/README.md`, then the fragment of each library the repo uses, concatenated in that order. It sits beside that language's code (`crates/STYLE.md`, `web/STYLE.md`); in a single-language repo the root `STYLE.md` takes it after its own sections.
+- Rewrite each example in the repo's languages and naming case, and point Naming 4 at the file that defines the repo's domain terms (`GLOSSARY.md`, DOC-7).
+- When the repo already has a style document, merge the templates into it instead: keep its rules, add the missing ones, and name each conflict in the hand-off for the owner to decide. Move its shared rules to the root `STYLE.md` and its language rules to that language's file.
 
-## STYLE.md
-
-Write [style-template.md](style-template.md) to the repo root as `STYLE.md`. Each language's never list goes in that language's own `STYLE.md`, so an agent working in one language doesn't load another's rules.
-
-- For each language the repo uses that has a stack file in [stacks/](stacks/), write a `STYLE.md` beside that language's code (`crates/STYLE.md`, `web/STYLE.md`) with a `## Never` section holding the items of the stack file's `## Never` list; drop items for libraries the repo doesn't use. The file also holds the repo's own decisions for that language. In a single-language repo with no separate language folder, add the `## Never` section to the root `STYLE.md` instead.
-- Fill the root file's index with one row per language the repo uses: its style file, its lint and compiler config files, and the skill that reviews it. Leave the style-file cell empty for a language with neither a never list nor its own decisions.
-- Rewrite each example in the repo's main language and naming case, and point Naming 4 at the file that defines the repo's domain terms (`GLOSSARY.md`, DOC-7).
-- Link the files from the root `AGENTS.md` in one line that names each language's file: "Read `STYLE.md`, plus `crates/STYLE.md` before Rust work or `web/STYLE.md` before TypeScript work."
-- When the repo already has a style document, merge the template into it instead: keep its rules, add the missing ones, and name each conflict in the hand-off for the owner to decide. Move its shared rules to the root `STYLE.md` and its language rules to that language's `STYLE.md`.
-
-## Skill copies
-
-The `rust` and `typescript` skills hold the general review rules that each language's `STYLE.md` leaves out. A copy in the repo keeps those rules available to a teammate without fstack installed and to tools that read only the repo (DOC-10).
-
-- Clone `https://github.com/frangkli/fstack` to a scratch folder and record its `main` head commit. For each language in the `STYLE.md` index that has an fstack skill, copy `skills/<lang>/` verbatim into `.agents/skills/<lang>/` and `.claude/skills/<lang>/` (one copy when `.claude/skills` links to `.agents/skills`), and add fstack's root `LICENSE` to each copy.
-- Add one line to `AGENTS.md`: "`.agents/skills/<lang>/` and `.claude/skills/<lang>/` are copies of fstack's skills at commit `<sha>`. Never edit them by hand. To refresh, replace both folders with fstack's, keep each `LICENSE`, and update this commit. Where fstack is also installed for the user, Claude Code uses the user's copy and Codex lists both." This line is a refresh rule, not a list of installed skills (DOC-3).
-- Exclude both folders from every hook and checker that rewrites or flags files: spell checkers, end-of-file and whitespace fixers, formatters and Markdown linters (in `.pre-commit-config.yaml`, `prek.toml` or the tool's own config).
-- Prove it: run the repo's hooks on all files and see no change in the copies, then run `diff -r -x LICENSE <clone>/skills/<lang> <copy>` for each copy and see exit 0.
+After setup the project owns its copies: it edits them freely, splits nothing out, and links nothing back to readiness.
 
 ## GLOSSARY.md
 
-```markdown
-# Glossary
-
-- **<Term>:** <what it means in this project, in one line>.
-```
-
-One line per domain term, alphabetical. Take the terms from type names, routes, tables and the README, and keep only words whose meaning here differs from everyday use or that a newcomer would have to look up. Grep each term; drop any that appear nowhere in the code or docs.
+Start from [templates/common/GLOSSARY.md](templates/common/GLOSSARY.md). One line per domain term, alphabetical. Take the terms from type names, routes, tables and the README, and keep only words whose meaning here differs from everyday use or that a newcomer would have to look up. Grep each term; drop any that appear nowhere in the code or docs.
 
 ## REVIEW_RULES.md
 
-Create `REVIEW_RULES.md` at the repo root in the shape [rules-home.md](../prevent-repeats/rules-home.md) gives, keeping only the rules below that fit the repo, and link it from the root `AGENTS.md`. Rules 9–12 apply to repos that run services. If AGENTS.md has a `## Code Review Rules` section, move its rules into the file and replace the section with the link.
+Create `REVIEW_RULES.md` at the repo root from [templates/common/REVIEW_RULES.md](templates/common/REVIEW_RULES.md), keeping only the rules that fit the repo, and link it from the root `AGENTS.md`. Rules 9–12 apply to repos that run services. If AGENTS.md has a `## Code Review Rules` section, move its rules into the file and replace the section with the link. Each Known non-issue names the test that pins it, where one exists.
 
-```markdown
-# Review rules
-
-Flag only with a concrete case (this input or situation leads to this wrong result). Skip what lint enforces, comment density that matches the file, function length, and everything under Known non-issues.
-
-1. Test integrity: a diff that changes code and tests together keeps assertions, expected values and test inputs as they were, unless it says why.
-2. Tests that would still pass if the subject returned `undefined` or a constant (loose matchers, asserting only that a mock was called).
-3. Broad `catch`, swallowed errors, success-shaped fallbacks, or silent defaults on required data.
-4. A new entry point (HTTP handler, CLI, queue consumer, env or config read) without parsing and validation; or re-validation deep inside code a boundary already validated.
-5. An abstraction with one caller or one implementation, a pass-through layer, or an option nobody sets.
-6. Compatibility shims, deprecated aliases or dual paths kept only for internal callers.
-7. Near-duplicate logic that must change together. Similar-looking code that changes for different reasons is fine.
-8. Unrelated refactors or formatting mixed into a behaviour change.
-9. An outbound call without a timeout or cancellation; retries without a bound and backoff, or retries of non-idempotent work.
-10. A retried, queued or scheduled operation that isn't idempotent.
-11. An unbounded queue, cache, pool, result set or in-memory list.
-12. A schema, API or event change that breaks old data, old clients or in-flight messages.
-
-## Enforced
-
-| Rule | Enforced by |
-|---|---|
-
-## Known non-issues
-```
-
-The review bots read the file from their dashboard settings, so the repo holds no bot rules files. Move the rules of any `.cursor/BUGBOT.md` or `.greptile/` into `REVIEW_RULES.md` and delete those files. Pointing each bot at `REVIEW_RULES.md` is a dashboard setting: list it in the hand-off as a step for the user, one line per bot.
+A review bot that reads only its own rules file gets a file that links `REVIEW_RULES.md` and holds no rules of its own, so the bot reviews against the same rules as everyone else and nothing is kept twice. For Bugbot that file is [templates/common/.cursor/BUGBOT.md](templates/common/.cursor/BUGBOT.md): Bugbot always includes the root `.cursor/BUGBOT.md` and counts every `.md` file it links as a rule, and its dashboard holds only rules written there, with no setting that reads a repo file ([Cursor's Bugbot docs](https://cursor.com/docs/bugbot), checked 2026-11-02). Move any rules already in a bot's file into `REVIEW_RULES.md`, leaving the link.

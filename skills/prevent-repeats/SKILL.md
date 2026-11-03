@@ -25,7 +25,7 @@ Done when every class cites two occurrences: a commit, a review comment or a log
 
 ## 3. Fix and prove
 
-Fix the most frequent classes now, one commit each. Prove each new check fails on a real past mistake: in a scratch worktree, reapply the offending change (or revert its fix), run the check, and see it fail with an error that names the fix. Wire the check into the command `GATES.md` lists for it, so it runs the same way locally and in CI. Exceptions go on the offending line with a reason, an expiry date and a human's approval.
+Fix the most frequent classes now, one commit each. Prove each new check fails on a real past mistake: in a scratch worktree, reapply the offending change (or revert its fix), run the check, and see it fail with an error that names the fix. Wire the check into the command the commands table in AGENTS.md (or `GATES.md` where a repo has one) lists for it, so it runs the same way locally and in CI. Exceptions go on the offending line with a reason, an expiry date and a human's approval.
 
 Done when every new check has failing output on a real past mistake and passing output on the fixed tree.
 

@@ -1,0 +1,39 @@
+# cargo-deny: licences, advisories, bans and sources (`cargo deny --locked check`).
+# The advisories check downloads the RustSec database. When a newly published advisory blocks
+# an unrelated change, add an `ignore` entry with its reason.
+
+[advisories]
+# Every vulnerability and unsound advisory fails; these keys tune the rest.
+unmaintained = "workspace"
+yanked = "deny"
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+allow-wildcard-paths = true # path dependencies between the workspace's own unpublished crates
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+
+[licenses]
+# Permissive licences compatible with shipping the repo under Apache-2.0 or MIT. Add a licence
+# only with the owner's agreement, and a per-crate exception with its reason:
+# exceptions = [{ crate = "<name>", allow = ["<licence>"] }]  # <why it is acceptable>
+allow = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "MIT",
+    "Unicode-3.0",
+    "Zlib",
+]
+confidence-threshold = 0.8
+# Lists the licences the repo accepts before any dependency uses them.
+unused-allowed-license = "allow"
+
+[licenses.private]
+# The workspace's own crates are unpublished and need no licence check.
+ignore = true

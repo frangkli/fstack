@@ -13,7 +13,7 @@ The recommended fix for ENV-1 and ENV-4 to ENV-7: six recipes, two T3 Code actio
 | `test <path>` | Runs the tests for one file or package |
 | `dev` | Runs the app through Portless and prints the worktree's URL |
 
-Use the repo's native runner: `package.json` scripts or `vp run <task>` in JS and TS repos, a root `justfile` only in a repo that mixes languages. `pnpm up` is pnpm's update command and `pnpm setup` is pnpm's own installer, so never name a script `up`, and call the setup script as `pnpm run setup` (or `vp run setup`) everywhere it appears. `GATES.md` maps each recipe to its command.
+Use the repo's native runner: `package.json` scripts or `vp run <task>` in JS and TS repos, a root `justfile` only in a repo that mixes languages. `pnpm up` is pnpm's update command and `pnpm setup` is pnpm's own installer, so never name a script `up`, and call the setup script as `pnpm run setup` (or `vp run setup`) everywhere it appears. The commands table in AGENTS.md (or `GATES.md` where a repo has one) maps each recipe to its command.
 
 ## `setup`
 

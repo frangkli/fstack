@@ -20,7 +20,7 @@ Numbered, each a measurable result with how it's measured: a number with its uni
 
 ## Done-predicate
 
-One run-level condition that decides the whole spec is delivered, countable and decided by printed output, never by an activity ("code written", "reviewed"). Usually: every ticket's CHECK passes on the integrated head, the repo's full readiness check from `GATES.md` exits 0, and each success criterion is shown met. An unattended run uses this as its goal, so it must be checkable from the run's own output.
+One run-level condition that decides the whole spec is delivered, countable and decided by printed output, never by an activity ("code written", "reviewed"). Usually: every ticket's CHECK passes on the integrated head, the repo's full readiness check from the commands table in AGENTS.md (or `GATES.md` where a repo has one) exits 0, and each success criterion is shown met. An unattended run uses this as its goal, so it must be checkable from the run's own output.
 
 ## Usage
 

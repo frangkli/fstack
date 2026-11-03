@@ -12,7 +12,7 @@ Every serious project needs a scripted way to drive the real app and prove behav
 Answer these from the codebase and only ask the user what you cannot observe:
 
 - **Surface:** what does a user actually touch? A web UI, a CLI/TUI, a desktop app, an API, a mobile app, a library? A repo can have several; cover the one you were asked for (else the primary one) and note the rest.
-- **Run:** how does the app start locally? Prefer the repo's own documented dev command (package scripts, task runner, README quickstart, `GATES.md`). Note ports, env vars, seed data, auth. Secrets come through the repo's secrets command (for example `fnox exec -- <command>`).
+- **Run:** how does the app start locally? Prefer the repo's own documented dev command (package scripts, task runner, README quickstart, the commands table in AGENTS.md or `GATES.md`). Note ports, env vars, seed data, auth. Secrets come through the repo's secrets command (for example `fnox exec -- <command>`).
 - **Drive:** how can an agent interact with it programmatically? Existing harnesses first — browser specs, expect scripts, PTY helpers, curl-able endpoints, a debug port. Only then pick a generic recipe: a browser automation CLI or CDP for web and Electron, a tmux/PTY harness for CLI/TUI, plain HTTP for services.
 - **Observe:** what evidence can be captured? Screenshots, terminal transcripts, response bodies, logs, traces, exit codes, DB state.
 - **Isolate:** can two instances run side by side (ports, data dirs, profiles, one database per worktree)? If not, say so in the generated skill: refusing to double-drive a shared instance beats corrupting the user's session.

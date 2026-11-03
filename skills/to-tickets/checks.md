@@ -10,7 +10,7 @@ It passes only when the command exits 0 **and** its output contains the token. E
 
 ## Writing one
 
-- **Start from `GATES.md`** (or the task runner scripts and CI workflow when the repo has none). Use the repo's check commands, narrowed to what the ticket touches (one package, a test-name filter). Use the cheapest command that observes the ticket's outcome; the full readiness check belongs only to the ticket that closes a breakage window or ends the run.
+- **Start from the commands table in AGENTS.md (or `GATES.md` where a repo has one)**, or the task runner scripts and CI workflow when the repo has neither. Use the repo's check commands, narrowed to what the ticket touches (one package, a test-name filter). Use the cheapest command that observes the ticket's outcome; the full readiness check belongs only to the ticket that closes a breakage window or ends the run.
 - **A success-only token.** Pick output that appears only after every assertion passed: the runner's summary line with a count from this ticket's tests ("4 passed"), or an `echo` chained with `&&` after the assertions.
 - **Observe the outcome, not an activity.** "A duplicate key returns 409", not "handler added".
 - **Measure numbers yourself.** A number copied from the spec into the token proves nothing; the command must compute it.

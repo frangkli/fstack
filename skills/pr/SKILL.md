@@ -10,7 +10,7 @@ Take a finished change to a green pull request: reviewed, committed in phases th
 **Where to start.** A change to ship: step 1. A PR that's already open (check it, get it green, answer comments): step 6. Only a PR body to write: [body.md](body.md).
 
 **Repo facts come from the repo.**
-- **Checks:** `GATES.md`. If the repo has none, take them from AGENTS.md, its `verify` skill and its CI workflows, and say which you used. Run the cheapest check that covers each commit, and the full readiness check once on the final head before each push.
+- **Checks:** the commands table in AGENTS.md (or `GATES.md` where a repo has one). If the repo has neither, take them from AGENTS.md, its `verify` skill and its CI workflows, and say which you used. Run the cheapest check that covers each commit, and the full readiness check once on the final head before each push.
 - **Base branch:** `gh repo view --json defaultBranchRef`, unless the PR stacks on another branch ([stacks.md](stacks.md)).
 - **Review bots:** found from the repo's config and recent PRs, as [babysit.md](babysit.md) describes.
 

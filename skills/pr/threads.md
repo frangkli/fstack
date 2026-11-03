@@ -51,6 +51,6 @@ Top-level comments have no thread: answer one with `gh api --method POST repos/{
 
 Verified dismissals that recur become entries under Known non-issues in `REVIEW_RULES.md` at the repo root, in the format [rules-home.md](../prevent-repeats/rules-home.md) gives. Read that section before triage. An entry speeds up a dismissal; each one is still verified against the current code.
 
-A dismissal becomes an entry once it has been verified on two PRs and its "Skip when" is narrow. The high-risk areas never become entries. The review bots read the same file from their dashboard settings, so an entry also stops them raising it.
+A dismissal becomes an entry once it has been verified on two PRs and its "Skip when" is narrow. The high-risk areas never become entries. A review bot pointed at the same file (Bugbot through a `.cursor/BUGBOT.md` that links it) stops raising an entry too.
 
 When the PR is green, collect this run's reusable dismissals as new entries. They go in their own PR, not this one: list them in the report as a proposed follow-up.

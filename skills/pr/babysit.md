@@ -19,7 +19,8 @@ Default to drive for a PR you just opened, and to check for a small or docs-only
 
 Before you treat silence as anything, know which checks and bots this PR should get:
 
-- **Config:** `.github/workflows/`, `.coderabbit.yaml`, and any review tool AGENTS.md or `GATES.md` names. Greptile and Bugbot are configured in their dashboards, so find them by what actually ran.
+- **Config:** `.github/workflows/`, `.coderabbit.yaml`, `.cursor/BUGBOT.md`, and any review tool AGENTS.md or `GATES.md` names. Greptile and Bugbot are switched on in their dashboards, so find them by what actually ran.
+- **Docs-only changes:** a change that touches only docs (Markdown and plans, no code or config) skips review bots that look only for bugs, such as Bugbot. Don't start one, and don't count it as missing.
 - **What actually ran:** the check runs and bot comments on the last few merged PRs (`gh pr list --state merged --limit 5 --json number,headRefOid`, then `gh api repos/{owner}/{repo}/commits/<sha>/check-runs` and each PR's comments).
 
 The **expected set** is those, plus every check that has appeared on any earlier head of this PR. A reviewer whose verdict you can read only in a browser counts as unknown; say so in the report.

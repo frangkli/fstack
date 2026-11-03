@@ -1,0 +1,7 @@
+# CI: run every test without stopping at the first failure, and write JUnit, which the
+# workflow uploads as an artifact with `if: always()`.
+[profile.ci]
+fail-fast = false
+
+[profile.ci.junit]
+path = "junit.xml"

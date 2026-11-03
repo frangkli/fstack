@@ -41,6 +41,14 @@ TypeScript tests that need SQL run on [PGlite](https://pglite.dev) by default: P
 - More than one connection at once: concurrent transactions, row locks, `LISTEN`/`NOTIFY` between sessions, pool behaviour. PGlite is single-user and single-connection; `pglite-socket` multiplexes clients over that one connection, so it doesn't stand in.
 - The production major version, when it differs from PGlite's (`SELECT version()`).
 
+## Tests against the services
+
+Tests that need the real Postgres (Rust tests, or TypeScript tests PGlite can't serve) run against the test container, not in the default test run:
+
+- **Marked and run apart:** each such test is marked as needing the services (in Rust, `#[ignore = "needs the services"]`), so the default test command passes with nothing running. One recipe runs them for one package and starts the services first (`test-int <package>: services-up`); its template is in [templates/rust/justfile](templates/rust/justfile).
+- **A test database per worktree:** each worktree's tests use its own database on the test container (`wt_<slug>_test`), so worktrees never share test state.
+- **The slug is parsed:** a type with a validating constructor builds the slug, and rejects one whose longest derived name (`wt_<slug>_test`) passes Postgres's 63-byte identifier limit. Postgres truncates a longer name silently, so two worktrees could share one database. Give the parser a never-panics property test.
+
 ## Test databases
 
 `fsync=off`, `synchronous_commit=off` and `full_page_writes=off` trade crash safety for speed, so they apply to test databases only. `fsync` and `full_page_writes` are server-wide, so test databases live in a second container (`<project>-pg-test`) with its own `data-test` and `run-test` folders, started with `-c fsync=off -c synchronous_commit=off -c full_page_writes=off -c file_copy_method=clone`, and its own template built the same way. With `fsync=off` the checkpoint leaves the template in memory, so after a rebuild also run `sync` on the host; otherwise the first clone waits while it's written. Dev databases keep the defaults.

@@ -1,0 +1,6 @@
+# Root Cargo.toml: insta recommends compiling it and its diff crate optimised in dev builds.
+[profile.dev.package.insta]
+opt-level = 3
+
+[profile.dev.package.similar]
+opt-level = 3

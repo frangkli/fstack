@@ -19,7 +19,7 @@ Review the session or workflow the user names. Explain its outcomes, reconstruct
 ## Categories
 
 - **Navigation**: how easily did the agent find the right files? Are there hidden dependencies between files? Would a **navigation pointer** help? _Use when_ finding a piece of information took long, or the agent read the same file three or more times.
-- **Automated checks**: could a check have caught the agent's mistake: a lint rule, a type, a test, a filesystem check? Read the repo's own check commands first (`GATES.md`, its task scripts, its CI workflow), so a check that exists but sits unwired or silently broken is the finding, not a reinvention. A repo with no **guardrail** (no hook and no CI job running its checks) is itself a finding. _Use when_ the agent made a mistake a check could have caught, or the repo has no guardrail.
+- **Automated checks**: could a check have caught the agent's mistake: a lint rule, a type, a test, a filesystem check? Read the repo's own check commands first (the commands table in AGENTS.md or `GATES.md`, its task scripts, its CI workflow), so a check that exists but sits unwired or silently broken is the finding, not a reinvention. A repo with no **guardrail** (no hook and no CI job running its checks) is itself a finding. _Use when_ the agent made a mistake a check could have caught, or the repo has no guardrail.
 - **Review rules**: should reviewers get a new rule, or should one be removed or clarified? Classify the mistake first. A **mechanical** one (a fixed pattern, a banned API, an import shape, a file-location rule) gets a deterministic check: a lint rule, hook or CI job, whichever the repo's tooling makes cheapest. A **judgement call** (cross-file consistency, fit with the surrounding design) gets a rule with a concrete failing case in the repo's review guidance. A pattern reviewers keep flagging that is intended gets a known non-issue entry there. _Use when_ review failed to catch a mistake, or flagged the same non-issue twice.
 - **Agent instruction size**: should steering instructions move into a check, or into review guidance where reviewers apply them? _Use when_ the repo's or the user's global agent instructions are large.
 - **No-ops**: instructions in steering files that don't change the agent's behaviour. _Use when_ the steering files are large.
@@ -41,6 +41,6 @@ Inspect the repository's existing instruction, review-rule and check locations b
 
 - `AGENTS.md` (and `CLAUDE.md` where a harness needs it): harness-loaded instructions. Use them sparingly for **navigation pointers**, including a pointer to the repo's review guidance.
 - `REVIEW_RULES.md`: review rules and known non-issues. Check which guidance the repo's agents and review bots actually read.
-- `GATES.md`: the check commands, what each covers and how long it takes.
+- The commands table in AGENTS.md (or `GATES.md` where a repo has one): the check commands, what each covers and how long it takes.
 - Docs: reference files reached by pointers. Look for an existing doc before writing a new one.
 - Skills: for docs whose description should sit in the agent's context, or for commands the user types. Follow `writing-for-agents`.

@@ -1,0 +1,18 @@
+// Merge into the Oxlint config of an app that renders React or other JSX.
+// Accessibility lint: the react and jsx-a11y plugins in an override for the UI files; the base
+// config's `correctness: "error"` turns their rules on at error. Map the design-system components
+// to the elements they render under the top-level `settings` key: Oxlint rejects `settings` inside
+// `overrides`. Set polymorphicPropName to the prop the component library uses (`render` for Base UI,
+// `as` for many others).
+// Bite test: `<Image src="x.png" />` without `alt` in a covered file must fail jsx-a11y(alt-text).
+{
+  "settings": { "jsx-a11y": { "components": { "Button": "button", "Link": "a", "Image": "img" }, "polymorphicPropName": "render" } },
+  "overrides": [
+    {
+      "files": ["src/**/*.{ts,tsx}"],
+      "plugins": ["react", "jsx-a11y"],
+      // the automatic JSX runtime (`jsx: "react-jsx"`) needs no React import in scope
+      "rules": { "react/react-in-jsx-scope": "off" }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+### regex and aho-corasick
+
+1. **Use regex for patterns:** it runs in linear time, so a crafted input can't make it backtrack. Compile once, in a `LazyLock` or at load time. When patterns are ASCII by intent, build them with `RegexBuilder::unicode(false)` over `regex::bytes`: Unicode classes (`\w`, `\d`, `\b`) can make a compiled pattern many times larger.
+2. **Use aho-corasick to find many literal strings in one pass, and as a keyword prefilter in front of many regexes** (STYLE.md Expensive work 3). For one or two literals, `str::contains` or `memchr::memmem` is enough. A `RegexSet` says which patterns match, not where, and keeps one bounded cache for all of them where N separate `Regex` values keep N caches of up to about 2 MiB each, so it suits a large list when you need only which matched; when you need positions, prefilter with aho-corasick and run the `Regex` of each pattern whose keyword appeared.

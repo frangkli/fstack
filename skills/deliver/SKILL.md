@@ -12,7 +12,7 @@ Take the work agreed in this thread, or the request passed with this skill, from
 
 **Working log.** From step 1, keep `.context/deliver/<slug>/log.md`: dial settings, the todo list, every ruling (format in [rulings.md](rulings.md)), the evidence for each check (command and result), and remaining work. After compaction or an interruption, resume from the log and the live git state.
 
-**Checks in proportion.** `GATES.md` lists the repo's check commands, what each covers and how long it takes. While iterating, run the cheapest command that covers the change; when a unit is done, check the packages it touched; run the full readiness check only at ship points: once on the integrated head, before opening or updating the PR, and before merge. Prototypes get a smoke check only.
+**Checks in proportion.** The commands table in AGENTS.md (or `GATES.md` where a repo has one) lists the repo's check commands, what each covers and how long it takes. While iterating, run the cheapest command that covers the change; when a unit is done, check the packages it touched; run the full readiness check only at ship points: once on the integrated head, before opening or updating the PR, and before merge. Prototypes get a smoke check only.
 
 **Questions.** Classify every question before asking it ([rulings.md](rulings.md)). If running something answers it, run it. Before approval, the user's questions go into the plan's decision batch. After approval, reopen approval only for the triggers in rulings.md; everything else is a logged ruling.
 
@@ -41,11 +41,11 @@ Done when the reply is sent and the todo list and log exist.
 
 ### 2. Ground
 
-- Read AGENTS.md, `GATES.md`, the repo's `verify` skill, decisions or ADRs on the area, and existing plans on the topic.
+- Read AGENTS.md and its commands table (or `GATES.md` where a repo has one), the repo's `verify` skill, decisions or ADRs on the area, and existing plans on the topic.
 - Inspect the current state: branch, uncommitted changes, other worktrees. Leave unrelated work as you found it.
 - Fetch and rebase onto the fresh trunk. Resolve conflicts by intent: neither the old plan nor trunk's code is right by default; judge both against the intended outcome, compatibility and simplicity, and revisit the design if trunk moved under it.
 - Trace the affected flow end to end, with its callers. List the existing primitives the change can reuse and the code it could remove.
-- Find the delivery facts: how the repo deploys (on merge or by hand), what it publishes, its observability, its configured review tools and bots, its isolated local environments, its secret runner (`fnox exec -- <command>` where configured), and which surfaces the change touches. Where `GATES.md` or a `verify` skill is missing, use the closest equivalent (CI config, package scripts, the surface's docs) and log the gap.
+- Find the delivery facts: how the repo deploys (on merge or by hand), what it publishes, its observability, its configured review tools and bots, its isolated local environments, its secret runner (`fnox exec -- <command>` where configured), and which surfaces the change touches. Where the commands table or a `verify` skill is missing, use the closest equivalent (CI config, package scripts, the surface's docs) and log the gap.
 
 Done when the log names the entry points and callers (`file:line`), the check that covers each, the deploy path, and every surface the change touches.
 

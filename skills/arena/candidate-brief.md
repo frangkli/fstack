@@ -16,7 +16,7 @@ You are one of several candidates working on the same task independently. Produc
 
 Rules:
 - Write only inside your worktree. Leave the base branch, other worktrees and the remote alone: no push, no rebase.
-- Run the cheapest check that proves your acceptance line, as the repo's `GATES.md` describes, and stop there.
+- Run the cheapest check that proves your acceptance line, as the commands table in AGENTS.md (or `GATES.md` where a repo has one) describes, and stop there.
 - Commit your result on your branch.
 
 Report:

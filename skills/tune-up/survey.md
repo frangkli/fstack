@@ -7,8 +7,8 @@ Read-only. Collect one deciding number per kind for the target, rank the kinds, 
 | `setup` | Age and level of the last readiness report | newest `docs/research/*-readiness.json` |
 | `ci` | Median PR run duration and rerun rate over the last 20 runs | `gh run list --event pull_request --limit 20 --json databaseId,workflowName,attempt,conclusion,createdAt,updatedAt` |
 | `deps` | Outdated packages by major, minor and patch; open bot PRs and how many fail | `pnpm outdated --format json` (or the stack's tool); `gh pr list --author app/dependabot` or `app/renovate` with `gh pr checks` |
-| `tests` | Test count and suite time | `GATES.md`, and one measured run of the suite |
-| `refactor`, `hardening` | Full check time; the 10 files changed most in 90 days | `GATES.md`; `git log --since=90.days --format= --name-only` counted per file |
+| `tests` | Test count and suite time | the commands table (AGENTS.md or `GATES.md`), and one measured run of the suite |
+| `refactor`, `hardening` | Full check time; the 10 files changed most in 90 days | the commands table (AGENTS.md or `GATES.md`); `git log --since=90.days --format= --name-only` counted per file |
 | `history` | Sessions, tool failures and retries for this project over 14 days | `agentsview session list --json --since 14d --project <name>` |
 | any | Date of the last run of that kind | the newest report or PR of that kind |
 

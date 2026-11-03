@@ -18,7 +18,7 @@ Re-run or re-read every number and status just before writing it; the report sta
 3. **What changed.** A few lines, with links to the PR, releases and the plan.
 4. **Verified outcomes.** Per surface: what ran and what it showed.
 5. **Rulings.** Taste rulings and challenges, each a row in the [rulings.md](rulings.md) format; mechanical rulings as a count plus any worth a look.
-6. **Remaining work and limitations.** Out-of-scope discoveries, repo gaps (no `GATES.md`, no `verify` skill), genuine blockers.
+6. **Remaining work and limitations.** Out-of-scope discoveries, repo gaps (no commands table in AGENTS.md or `GATES.md`, no `verify` skill), genuine blockers.
 7. **Attention.** What the user should check, drawn from the rulings log: taste rulings made after approval, challenges followed rather than raised, anything verified below the live surface, findings dismissed on a narrow argument. "Nothing needs attention" is a valid entry.
 8. **Decisions for the user**, each with options and a recommended default, or "nothing needs you".
 

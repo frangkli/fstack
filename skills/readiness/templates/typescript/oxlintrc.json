@@ -1,0 +1,137 @@
+// The Oxlint config. Rule ids checked against Oxlint 1.87 with oxlint-tsgolint 7.0 and Vite+ 0.2.9;
+// confirm them against the installed version. Vite+ runs Oxlint as `vp lint` and reads the same
+// keys from the `lint` block of vite.config.ts; its own preset is Oxlint's default (only the
+// correctness category) plus vite-plus/prefer-vite-plus-imports, so a repo needs this fragment.
+//
+// Categories: correctness, suspicious and perf on, every other rule named. pedantic, style and
+// restriction turned on wholesale bring rules that oppose each other (import/no-default-export and
+// import/prefer-default-export) or STYLE.md, and a named list means an Oxlint upgrade can't add
+// rules silently. Compatible despite their names: unicorn/no-array-reduce allows a
+// single-operation callback such as a sum; strict-boolean-expressions allows `if (user)`;
+// switch-exhaustiveness-check allows the `never` arm.
+//
+// No rule here checks that a boolean is named isX or hasX, that generic names are descriptive, or
+// that a disable carries a `-- reason`: review checks those (STYLE.md Naming, Escape hatches).
+{
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "import", "promise"],
+  "categories": { "correctness": "error", "suspicious": "error", "perf": "error" },
+  // reportUnusedDisableDirectives: an unused disable fails, so it goes with the code that needed it.
+  "options": { "typeAware": true, "typeCheck": true, "denyWarnings": true, "reportUnusedDisableDirectives": "error" },
+  "rules": {
+    // Off: each would contradict STYLE.md under this baseline
+    "no-underscore-dangle": "off", // flags `x._tag` reads and `const _unused` bindings
+    "oxc/no-map-spread": "off", // its fix rewrites to a mutating Object.assign on elements other code may hold
+    "unicorn/consistent-function-scoping": "off", // flags every small local helper beside its one use
+
+    // No `any`: unknown, then narrow. The no-unsafe-* rules catch `any` from libraries, JSON.parse and res.json()
+    "typescript/no-explicit-any": "error",
+    "typescript/no-unsafe-argument": "error",
+    "typescript/no-unsafe-assignment": "error",
+    "typescript/no-unsafe-call": "error",
+    "typescript/no-unsafe-member-access": "error",
+    "typescript/no-unsafe-return": "error",
+    // No `!`: noUncheckedIndexedAccess makes index reads handle undefined instead
+    "typescript/no-non-null-assertion": "error",
+    // No runtime namespaces; type-only `declare namespace` stays allowed (erasableSyntaxOnly bans the rest)
+    "typescript/no-namespace": ["error", { "allowDeclarations": true }],
+
+    // Promises handled: `void` marks a deliberate fire-and-forget (no-floating-promises is in correctness)
+    "typescript/no-misused-promises": "error",
+    "typescript/return-await": "error",
+    "unicorn/prefer-top-level-await": "error", // top-level await over module-level .then
+    // Throw and reject Errors with a message; catch callbacks take unknown (strict covers `catch (e)`)
+    "typescript/only-throw-error": "error",
+    "typescript/prefer-promise-reject-errors": "error",
+    "typescript/use-unknown-in-catch-callback-variable": "error",
+    "unicorn/error-message": "error",
+    "unicorn/throw-new-error": "error",
+    // No checks for states the type rules out; strict-boolean-expressions' default allows nullable objects
+    "typescript/strict-boolean-expressions": "error",
+    "typescript/no-unnecessary-condition": "error", // nursery: drop it if it misfires
+    // Exhaustive switches; the default still allows the `never` arm
+    "typescript/switch-exhaustiveness-check": "error",
+    // @ts-expect-error with a description; never @ts-ignore
+    "typescript/ban-ts-comment": ["error", { "minimumDescriptionLength": 10 }],
+
+    // `===` everywhere except `x != null`, which checks null and undefined together; parseInt takes a radix; no eval
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "radix": "error",
+    "no-new-func": "error",
+    // User keys and numbers from strings
+    "no-prototype-builtins": "error",
+    "prefer-object-has-own": "error",
+    "typescript/no-dynamic-delete": "error",
+    "unicorn/prefer-number-properties": "error",
+
+    // Named exports only, and no barrel files. The barrel rule counts only `export *`, so review
+    // catches re-export files built from `export { a } from`; the default threshold (100) flags only huge barrels
+    "import/no-default-export": "error",
+    "oxc/no-barrel-file": ["error", { "threshold": 0 }],
+    // Logging goes through the repo's logger; unused exports and files are knip's
+    "no-console": "error",
+    // `const`; no parameter mutation; readonly class fields
+    "prefer-const": "error",
+    "no-param-reassign": ["error", { "props": true }],
+    "typescript/prefer-readonly": "error",
+    "no-empty": "error",
+    // Data transforms: chains for transforms, for…of for effects (single-operation reduces such as sums stay allowed)
+    "unicorn/no-array-for-each": "error",
+    "unicorn/no-array-reduce": "error",
+    "typescript/prefer-for-of": "error",
+    // Disables name a rule; also flags a bare oxlint-disable
+    "unicorn/no-abusive-eslint-disable": "error",
+
+    // `interface` for object shapes (an intersection `type A = B & {…}` isn't flagged, so review checks
+    // `extends`) and property-style members
+    "typescript/consistent-type-definitions": "error",
+    "typescript/method-signature-style": ["error", "property"],
+    // Separate `import type`, one import per module, imports first, no `export let`.
+    // verbatimModuleSyntax enforces the type imports; this rule stays for its autofix
+    "typescript/consistent-type-imports": "error",
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "import/no-duplicates": "error",
+    "import/first": "error",
+    "import/no-mutable-exports": "error",
+    // T[] for simple element types, Array<…> for complex ones (Array<string | number>); `generic` in Effect packages
+    "typescript/array-type": ["error", { "default": "array-simple" }],
+    // Narrowing casts: bans `<T>x` and `{…} as T`; no-unsafe-type-assertion and
+    // no-unnecessary-type-assertion are type-aware and in the categories above
+    "typescript/consistent-type-assertions": ["error", { "assertionStyle": "as", "objectLiteralTypeAssertions": "never" }],
+    "typescript/no-inferrable-types": "error",
+    "typescript/prefer-find": "error",
+    "typescript/prefer-string-starts-ends-with": "error",
+    // Bans only `const f = function () {}`; declarations for module-level functions are review's
+    // (Oxlint's default is "expression", which would contradict STYLE.md Functions 5)
+    "func-style": ["error", "declaration", { "allowArrowFunctions": true, "allowTypeAnnotation": true }],
+    // One condition per ternary (unicorn/no-nested-ternary would allow one parenthesised level)
+    "no-nested-ternary": "error",
+    // Current idioms
+    "no-implicit-coercion": "error",
+    "no-template-curly-in-string": "error",
+    "default-param-last": "error",
+    "prefer-object-spread": "error",
+    "prefer-template": "error",
+    "logical-assignment-operators": "error",
+    "unicorn/prefer-structured-clone": "error",
+    "unicorn/prefer-includes": "error",
+    "unicorn/prefer-optional-catch-binding": "error",
+    "unicorn/prefer-object-from-entries": "error",
+    "unicorn/prefer-global-this": "error"
+
+    // Also on through the categories: require-array-sort-compare, unicorn/no-array-sort and
+    // unicorn/no-array-reverse (sorts and in-place mutation); no-for-in-array; no-floating-promises,
+    // await-thenable; preserve-caught-error; no-unnecessary-type-parameters (a type parameter appears
+    // twice); no-accumulating-spread, prefer-array-flat-map, prefer-set-has; no-await-in-loop
+    // (sequential awaits carry a disable with the reason).
+    //
+    // Passing no-unused-vars any options object drops its default of ignoring `^_` names; restate
+    // argsIgnorePattern, varsIgnorePattern and caughtErrorsIgnorePattern as "^_" if you configure it.
+  },
+  "overrides": [
+    // Add the framework's route and page globs here
+    { "files": ["**/*.config.ts", "**/*.stories.tsx"], "rules": { "import/no-default-export": "off" } },
+    { "files": ["scripts/**"], "rules": { "no-console": "off" } },
+    // Package entry files: the files each package.json `exports` names
+    { "files": ["packages/*/src/index.ts"], "rules": { "oxc/no-barrel-file": "off" } }
+  ]
+}

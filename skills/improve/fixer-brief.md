@@ -18,5 +18,5 @@ Rules:
 - Keep every behaviour the contract requires. If removing one is the only fix, reject the finding as "needs a decision" and name the requirement.
 - In the final style pass, reject as "needs a decision" a fix that would change a public interface other modules or packages depend on.
 - Write code and comments as if the loop didn't exist: nothing that mentions rounds, reviewers or earlier fixes.
-- Run the cheapest check that covers each fix, as the repo's `GATES.md` describes, under `timeout`. If the same check fails twice with the same error, stop and return "blocked" with both attempts.
+- Run the cheapest check that covers each fix, as the commands table in AGENTS.md (or `GATES.md` where a repo has one) describes, under `timeout`. If the same check fails twice with the same error, stop and return "blocked" with both attempts.
 - Build anything you need from another commit in a `git worktree` under the state folder's `scratch/`, never in `/tmp`, and never set `CARGO_TARGET_DIR`.

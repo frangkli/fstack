@@ -20,7 +20,7 @@ Each commit is one step a reviewer can read alone and `git bisect` can land on. 
 4. **Unstage:** `git reset origin/<base>`. The working tree keeps every change.
 5. **Commit each phase:** `git add <paths>`, then `git commit -F .context/pr/<branch>/msg-<n>.txt`. When one file belongs to two phases, stage part of it: `git diff <file> > part.patch`, cut the patch down to this phase's hunks, `git apply --cached part.patch`.
 6. **Check the tree:** `test "$(git rev-parse HEAD^{tree})" = "$TREE"`. If it fails, `git diff "$TREE" HEAD` shows what was lost or added; fix it until the trees match. `git status --porcelain` lists only the files you left out on purpose.
-7. **Check every commit:** `git rebase --exec "<cheap check>" origin/<base>`. The cheap check builds or type-checks and runs the tests of what the commit touches, per `GATES.md`. A failing commit stops the rebase there; move the missing piece into that commit, `git rebase --continue`, then check the tree again.
+7. **Check every commit:** `git rebase --exec "<cheap check>" origin/<base>`. The cheap check builds or type-checks and runs the tests of what the commit touches, per the commands table in AGENTS.md (or `GATES.md` where a repo has one). A failing commit stops the rebase there; move the missing piece into that commit, `git rebase --continue`, then check the tree again.
 
 Keep `backup/<branch>` until the PR merges, then delete it.
 

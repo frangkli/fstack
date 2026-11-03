@@ -41,7 +41,7 @@ Done when every question has at least one finished investigation behind it. Wait
 ## 4. Check what came back
 
 - Open the cited lines yourself for every claim the doc's headers will rest on. Where subagents disagree, the live code decides.
-- Run a check only when a finding depends on runtime behaviour that reading leaves uncertain: the single test file or command that covers it, found through the repo's `GATES.md` or its test config. Record the command and the observed result. Research changes no code, so the repo's hand-off and readiness checks don't apply to it.
+- Run a check only when a finding depends on runtime behaviour that reading leaves uncertain: the single test file or command that covers it, found through the commands table in AGENTS.md (or `GATES.md` where a repo has one) or its test config. Record the command and the observed result. Research changes no code, so the repo's hand-off and readiness checks don't apply to it.
 - Keep **tests read** and **checks run** apart. "A test asserts X" means you read it. "X holds" needs a command you ran and its output.
 - For a gap, run one targeted follow-up investigation. What's still unknown after that becomes an open question, with what blocked it.
 

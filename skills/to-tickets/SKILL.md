@@ -10,7 +10,7 @@ Break the work into **tickets**: tracer-bullet vertical slices, riskiest first, 
 
 ## Steps
 
-1. **Gather.** Read the source in full: the spec or plan at the path or link you were given (with its comments), or the conversation. Read AGENTS.md and the repo's `GATES.md`; without one, find the check commands in its task runner scripts and CI workflow. Done when you can list every requirement, success criterion and breakage window in the source.
+1. **Gather.** Read the source in full: the spec or plan at the path or link you were given (with its comments), or the conversation. Read AGENTS.md and its commands table (or `GATES.md` where a repo has one); without either, find the check commands in its task runner scripts and CI workflow. Done when you can list every requirement, success criterion and breakage window in the source.
 2. **Explore** the code the work touches: its domain vocabulary, ADRs in the area, modules and helpers to reuse, and prefactoring that would make the change easy. Done when each requirement has a module it lands in.
 3. **Slice** by the rules below. Done when every ticket has a title, blockers and the behaviour it delivers.
 4. **CHECK each ticket** per [checks.md](checks.md). Where a CHECK is cheap to run, run it now and confirm it doesn't pass yet. Done when every ticket has exactly one CHECK line.

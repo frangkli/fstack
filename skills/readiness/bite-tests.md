@@ -27,6 +27,9 @@ Pick one that the repo's configuration should catch; read its config first so th
 | Import boundaries | Import a package's internal file from outside it |
 | Accessibility lint | Render a mapped image component (`<Image>`) without `alt` |
 | Design-system lint | Add an arbitrary value (`p-[13px]`) to a component's `className` |
+| Effect diagnostics | In an Effect package, `yield* new NotFound(…)` without `return` in a generator must fail (`missingReturnYieldStar`); a gate that runs no `effecttsgo/*` rule catches nothing |
+| Snapshot orphan check | Add a `.snap` file that no test references; the snapshot gate must reject it |
+| Publish guard hook | Write a home path (`/home/<user>/…`) into a file outside the private docs folder and commit it in the scratch worktree; the hook must reject it |
 | Log redaction | Log a fake credential through the app's logger; the emitted event must show it redacted |
 | CI parity | Read the CI job's steps and compare them with the local check command, step by step; a step only CI runs is a FAIL for SEC-3 |
 

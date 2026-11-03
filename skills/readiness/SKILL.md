@@ -22,7 +22,7 @@ Read before judging. Record:
 
 - **Stacks:** languages, package managers, toolchain pins.
 - **Apps:** each independently run or deployed unit (web app, API, worker, CLI, published package) with its surface (UI, HTTP, CLI, library), its start command and where it deploys. App-scoped criteria are scored once per app.
-- **Existing tools:** checkers, test runners, hooks, CI system, review bots, secrets handling, observability backends, agent docs (`AGENTS.md`, `GATES.md`, `GLOSSARY.md`, `STYLE.md` or another style document, `t3.json`, the `verify` skill under `.agents/skills/`).
+- **Existing tools:** checkers, test runners, hooks, CI system, review bots, secrets handling, observability backends, agent docs (`AGENTS.md` and its commands table, `GATES.md`, `GLOSSARY.md`, `STYLE.md` or another style document, `TESTING.md`, `t3.json`, the `verify` skill under `.agents/skills/`).
 - **Conditions that make criteria apply:** per app, whether it renders React or JSX, uses shadcn/ui (`components.json`), is a shared component library, calls a model (an LLM SDK in its dependencies), and has users or runs in production (ask the user when the repo doesn't show it).
 
 Done when every app has a surface, a start command (or "none found"), its list of checkers and its conditions.
@@ -61,8 +61,16 @@ End the report with the decision batch: one line per gap, the recommended option
 Only after the user approves, and only the gaps they approved:
 
 1. One branch for all approved fixes. Merge into existing configs, never overwrite them. For a missing `verify` skill, run `verify-create` once per app surface. `PRODUCT.md` and `DESIGN.md` stay the owner's: the hand-off names `/impeccable init`, which interviews the owner before it writes `PRODUCT.md`. After writing `t3.json`, the hand-off tells the owner to import its actions once in T3's project settings.
-2. Prove each fix: the criterion it targets now passes with fresh evidence, including its bite test.
-3. Re-run steps 3–4 on the branch and save the new report beside the old one.
-4. Ship through `pr`, with the before and after levels in the body.
+2. For the agent-docs and checks gaps, set the repo up from [templates/](templates/), per [manifest.md](manifest.md): the common files, and for each language the repo uses its `STYLE.md`, `libraries/README.md` and the fragment of each library it uses, concatenated into one style file (beside that language's code, or the root `STYLE.md` in a single-language repo), with each config fragment merged into the repo's config. Confirm each lint and rule name against the repo's pinned toolchain, keep a repo's own lint set where it already does the job, and leave out fragments for libraries the repo doesn't use. [agent-docs.md](agent-docs.md) has the details.
+3. Prove each fix: the criterion it targets now passes with fresh evidence, including its bite test.
+4. Re-run steps 3–4 on the branch and save the new report beside the old one.
+5. Ship through `pr`, with the before and after levels in the body.
 
 Done when the re-run audit passes every approved criterion and the PR's checks are green on its head commit.
+
+## After setup
+
+- The project owns its copies of the templates and edits them freely. Nothing requires a split between general and project rules, and nothing links back to readiness.
+- The audit checks only that each language has a style file and a lint config (DOC-10), not what they say.
+- On request, a drift report diffs the project's copies against the templates, for information only: it shows general fixes worth bringing back.
+- A general rule fix found in a project comes back to these templates by hand, with the project's names and details removed.

@@ -1,0 +1,9 @@
+# Fuzz one target of fuzz/ for some seconds; further arguments go to libFuzzer.
+# -s none needs no nightly flags; a lint new in a later toolchain must not stop a fuzz run.
+fuzz target seconds="60" *flags:
+    mkdir -p fuzz/corpus/{{ target }}
+    CARGO_BUILD_WARNINGS=warn cargo fuzz run -s none {{ target }} fuzz/corpus/{{ target }} -- -max_total_time={{ seconds }} -rss_limit_mb=4096 {{ flags }}
+
+# Add to the check recipe: fuzz/ is its own workspace, so its targets break unseen unless lint builds them.
+#     cargo fmt --manifest-path fuzz/Cargo.toml --check
+#     cargo clippy --manifest-path fuzz/Cargo.toml --all-targets -- -D warnings
