@@ -59,7 +59,7 @@ git clone https://github.com/frangkli/fstack && cp fstack/agents/*.md ~/.claude/
 | `retro` | A retrospective on a session that proposes changes to the agent's setup. |
 | `prevent-repeats` | Finds mistakes agents keep repeating and adds a check that fails on a real past one. |
 | `test-audit` | Finds tests that don't earn their place. |
-| `readiness` | Scores how well agents can work in a repo, fixes the gaps you approve, and sets a repo up from tested style and config templates. |
+| `readiness` | Scores how well agents can work in a repo, fixes the gaps you approve, and sets a repo up from its style and config templates. |
 | `verify-create` | Generates a project `verify` skill that drives the app the way a user would. |
 | `verify-maintain` | Keeps that `verify` skill honest as the app changes. |
 | `tune-up` | Measured improvement runs on a repo or the whole agent setup. |
