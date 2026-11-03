@@ -73,4 +73,4 @@ Done when the re-run audit passes every approved criterion and the PR's checks a
 - The project owns its copies of the templates and edits them freely. Nothing requires a split between general and project rules, and nothing links back to readiness.
 - The audit checks only that each language has a style file and a lint config (DOC-10), not what they say.
 - On request, a drift report diffs the project's copies against the templates, for information only: it shows general fixes worth bringing back.
-- A general rule fix found in a project comes back to these templates by hand, with the project's names and details removed. The templates are tested by the sample projects in fstack's `tests/readiness-templates/` (`just templates`).
+- A general rule fix found in a project comes back to these templates by hand, with the project's names and details removed.

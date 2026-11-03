@@ -71,7 +71,3 @@ Each `typescript/libraries/<name>/STYLE.md` is appended after the README for a l
 | `knip/knip.json` | the package root, entries adjusted; knip runs in the check command | knip |
 
 Fragments: effect, faker, happy-dom, knip, msw, orval, react, shadcn, tanstack-query, tanstack-router, tanstack-start, testing-library, vitest, zod.
-
-## Testing the templates
-
-fstack's `tests/readiness-templates/` holds a sample Rust crate and a sample TypeScript package that follow the template rules. `just templates` copies each into a scratch folder with the template configs and runs its checks; it never runs the React, shadcn or Effect fragments, which need their frameworks.
