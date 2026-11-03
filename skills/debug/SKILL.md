@@ -7,7 +7,7 @@ description: 'Diagnosis loop for bugs and performance regressions: build a red f
 
 A discipline for hard bugs. Skip phases only when explicitly justified.
 
-When exploring the codebase, read the repo's glossary or domain doc (`GLOSSARY.md`, `CONTEXT.md`) if one exists to get a clear mental model of the relevant modules, and check ADRs in the area you're touching. Read `GATES.md` for the check commands, what each covers and how long it takes.
+When exploring the codebase, read the repo's glossary or domain doc (`GLOSSARY.md`, `CONTEXT.md`) if one exists to get a clear mental model of the relevant modules, and check ADRs in the area you're touching. Read the commands table in AGENTS.md (or `GATES.md` where a repo has one) for the check commands, what each covers and how long it takes.
 
 For a production issue, start from observability evidence before forming theories: Sentry issues and traces, Axiom logs and PostHog replays, through their CLIs or MCP servers.
 
@@ -27,7 +27,7 @@ Spend disproportionate effort here. **Be aggressive. Be creative. Refuse to give
 
 ### Ways to construct one, in roughly this order
 
-1. **Failing test** at whatever seam reaches the bug: unit, integration, e2e. `GATES.md` names the runner; run the single test or file, not the suite.
+1. **Failing test** at whatever seam reaches the bug: unit, integration, e2e. The commands table in AGENTS.md (or `GATES.md` where a repo has one) names the runner; run the single test or file, not the suite.
 2. **Curl / HTTP script** against a running dev server.
 3. **CLI invocation** with a fixture input, diffing stdout against a known-good snapshot.
 4. **Headless browser script** that drives the UI and asserts on DOM/console/network.
@@ -130,7 +130,7 @@ If a correct seam exists:
 3. Watch it fail in its own assertion (an import, fixture or setup error is a broken test, not a red one). If you forced the red by mutating code or a fixture, `diff` against a pristine copy to prove the mutation landed before you trust it.
 4. Apply the fix.
 5. Watch it pass.
-6. Re-run the Phase 1 feedback loop against the original (un-minimised) scenario, then the cheapest `GATES.md` checks that cover the packages you touched.
+6. Re-run the Phase 1 feedback loop against the original (un-minimised) scenario, then the cheapest checks from the commands table in AGENTS.md (or `GATES.md` where a repo has one) that cover the packages you touched.
 
 The name and assertion explain the test. Add a comment only when they leave its value unclear. If the regression isn't obvious from the name, put one line in the PR body on why the test exists and what a green run doesn't prove (mocks or fixtures standing in for reality). If production code gained an export, flag or hook that only this test uses, the test belongs at a real boundary instead.
 

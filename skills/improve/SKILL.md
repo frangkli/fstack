@@ -32,7 +32,7 @@ Fresh reviewers find defects, a fresh verifier confirms them and a fresh fixer f
 
 After each step, rewrite `next.md`: whether the run is the final style pass, the step just finished, the next one, the last reviewed head, the high-risk files, the closing ids, and any lane still running. Run every long command under `timeout`. The same check failing twice with the same error halts the run as blocked, with both attempts.
 
-Run the repo's cheapest relevant checks while fixing, and its full readiness check once at the end, as `GATES.md` describes.
+Run the repo's cheapest relevant checks while fixing, and its full readiness check once at the end, as the commands table in AGENTS.md (or `GATES.md` where a repo has one) describes.
 
 ## Final style pass
 

@@ -53,7 +53,7 @@ Long logs, review ledgers, full hashes and per-file checklists go in a linked fi
 
 ## Before posting
 
-- Read the title, body and commit messages for secrets, customer names, emails and personal data, and run the repo's secret scanner on the body file if `GATES.md` names one.
+- Read the title, body and commit messages for secrets, customer names, emails and personal data, and run the repo's secret scanner on the body file if the commands table names one.
 - Use `Closes #<n>` only when every acceptance criterion of that issue is verified; otherwise `Refs #<n>` and what remains.
 
 ## Updating

@@ -66,7 +66,7 @@ Done when every graft is listed with its source candidate, and every strength yo
 
 ## 8. Verify
 
-Check the synthesised artifact against the brief's acceptance check. For code, run the cheapest checks that cover it, as the repo's `GATES.md` describes; the full readiness check belongs to ship points. When verification finds a problem a candidate had handled, go back to step 7. When no candidate handled it, the frame was wrong: go back to step 1.
+Check the synthesised artifact against the brief's acceptance check. For code, run the cheapest checks that cover it, as the commands table in AGENTS.md (or `GATES.md` where a repo has one) describes; the full readiness check belongs to ship points. When verification finds a problem a candidate had handled, go back to step 7. When no candidate handled it, the frame was wrong: go back to step 1.
 
 ## 9. Record and clean up
 

@@ -15,7 +15,7 @@ OUT OF SCOPE  Paths and behaviour to leave alone, including CHECK scripts and te
 INTERFACES    The exact types, signatures, schemas or formats this unit delivers, or "none: <why>".
 ACCEPTANCE    Numbered pass/fail criteria from the ticket. Each test names what it protects and the
               change that would make it fail.
-VERIFY        The ticket CHECK: `<command>` → `<expected>`, plus the cheapest check from GATES.md
+VERIFY        The ticket CHECK: `<command>` → `<expected>`, plus the cheapest check from the commands table in AGENTS.md (or GATES.md where a repo has one)
               that covers the change. Each new test fails before the change. Known gotchas.
 EXIT          The checkable predicate that means done. Never relax it; report blocked instead.
 FORBIDDEN     Push, merge, force-push and PRs; you integrate. Rebasing anything but your own save points.

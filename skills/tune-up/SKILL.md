@@ -28,7 +28,7 @@ The routed skills are siblings of this one. Read and follow `../<skill>/SKILL.md
 
 | Kind | Runs | Tune-up measures |
 |---|---|---|
-| `refactor` | `improve` with its maintenance lens on the target paths | lines removed; check time from `GATES.md` |
+| `refactor` | `improve` with its maintenance lens on the target paths | lines removed; check time from the commands table (AGENTS.md or `GATES.md`) |
 | `hardening` | `improve` on the target paths | findings fixed; check time |
 | `tests` | `test-audit` in sweep mode | test count and suite time |
 | `setup` | `readiness` | the level, from its JSON reports |
