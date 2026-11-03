@@ -1,0 +1,4 @@
+### chrono and uuid
+
+1. **Hold instants as `chrono::DateTime<Utc>` and durations as `std::time::Duration`.** Pick the time crate your boundaries support: sqlx, the `clickhouse` crate and utoipa all read and write chrono types, so `DateTime<Utc>` crosses each without adapters. jiff has better-designed types; choose it when your database and API clients support it or you accept writing the adapters. Never add `time` beside chrono: it does the same job. Declare chrono with `default-features = false, features = ["std", "serde"]`, and add `clock` only in the crate that reads the time.
+2. **Generate random (`v4`) or time-ordered (`v7`) UUIDs only at the edge,** behind `clippy.toml`'s `disallowed-methods` with an `#[expect]` at the one call site, and derive ids from content otherwise (STYLE.md Data 6). Skip UUIDv7 and ulid unless something needs time-ordered random ids.

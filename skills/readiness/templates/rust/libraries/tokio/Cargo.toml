@@ -1,0 +1,4 @@
+# Each crate enables only the tokio features it uses.
+[dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time", "sync"] }
+tokio-util = { workspace = true, features = ["rt"] } # TaskTracker; CancellationToken needs no feature

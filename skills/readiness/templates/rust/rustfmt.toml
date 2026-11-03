@@ -1,0 +1,2 @@
+# Format with the 2024 style edition; everything else stays at rustfmt's defaults.
+style_edition = "2024"

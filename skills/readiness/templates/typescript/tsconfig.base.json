@@ -1,0 +1,79 @@
+// The strict baseline every package extends ("extends": "<path>/tsconfig.base.json").
+// Each flag replaces lint rules, so set these before the linter. Loosen a flag only as a task of
+// its own, one at a time, with a comment giving the reason (STYLE.md, Escape hatches 6).
+//
+// Version notes, for the TypeScript the repo pins:
+// - 5.5: inferred type predicates, so `filter((x) => x != null)` narrows.
+// - 5.8: erasableSyntaxOnly.
+// - 6.0: strict is on by default; module defaults to esnext; target floats to the newest edition;
+//   types defaults to []; noUncheckedSideEffectImports is on. Deprecated: baseUrl, moduleResolution
+//   node10 and classic, esModuleInterop false. Use paths without baseUrl, and bundler or nodenext.
+// - 7.0: the native compiler, about ten times faster. It keeps 6.0's defaults and turns its
+//   deprecations into errors. Type-aware linters built on it (tsgolint) require it, so most
+//   "the checker is slow" workarounds can go.
+{
+  "compilerOptions": {
+    // useUnknownInCatchVariables makes `catch (e)` unknown; the lint rule still covers
+    // `.catch((e) => …)` callbacks (use-unknown-in-catch-callback-variable).
+    "strict": true,
+    // Index and record reads include undefined, so a missing key surfaces at compile time;
+    // with no-non-null-assertion, `!` isn't the escape.
+    "noUncheckedIndexedAccess": true,
+    // `x?: T` means "may be absent", not "may be undefined", so an explicit undefined is rejected.
+    // The flag most likely to clash with third-party types: wrap the library before loosening it.
+    "exactOptionalPropertyTypes": true,
+    // Index-signature reads use brackets (`headers["authorization"]`), so a read that may miss
+    // looks different from a declared field.
+    "noPropertyAccessFromIndexSignature": true,
+    // Every path of a function that returns a value returns one (most of consistent-return).
+    "noImplicitReturns": true,
+    // Renaming a base method can't silently orphan an override.
+    "noImplicitOverride": true,
+    // Replaces no-fallthrough.
+    "noFallthroughCasesInSwitch": true,
+
+    // Type-only imports must say `import type`, so what is erased is visible. Replaces
+    // typescript/consistent-type-imports, which stays on for its autofix.
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    // Rejects enums, runtime namespaces and parameter properties, so type-stripping runtimes run
+    // the file as written. Oxlint has no no-restricted-syntax; this flag is the only full ban.
+    "erasableSyntaxOnly": true,
+    // Every file is a module, so stray globals and accidental declaration merging don't happen.
+    "moduleDetection": "force",
+
+    // Module mode, picked by what runs the code:
+    // - a bundler (Vite, esbuild, a framework build): "module": "preserve", "noEmit": true,
+    //   extensionless relative imports (below);
+    // - Node runs tsc's output: "module": "nodenext", `.js` extensions on relative imports;
+    // - Node or Bun runs .ts directly (type stripping): "module": "nodenext" with
+    //   "allowImportingTsExtensions": true and "noEmit": true, or
+    //   "rewriteRelativeImportExtensions": true when tsc also emits; `.ts` extensions.
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "target": "es2022",
+    "lib": ["es2022"],
+
+    // TypeScript 6.0 made the default an empty list, so ambient types are no longer picked up from
+    // every installed @types package: name each one a package needs (for example ["node"]).
+    "types": [],
+
+    // Skips checking dependencies' .d.ts files; their errors aren't yours to fix.
+    "skipLibCheck": true
+
+    // Unused locals and parameters are left to the linter (no-unused-vars with an `_` ignore
+    // pattern) rather than noUnusedLocals and noUnusedParameters, which block compiles halfway
+    // through an edit. A repo that already turns them on keeps them.
+
+    // A published library package adds, in its own tsconfig:
+    // "declaration": true,
+    // "isolatedDeclarations": true,  // explicit types on exports; replaces explicit-module-boundary-types
+    // "composite": true,             // when packages in the repo build against each other
+    // Before publishing, check its exports and types resolve for every consumer mode (publint, and
+    // Are The Types Wrong). A library never ships global type patches such as ts-reset.
+  }
+  // Each package sets "include" to its sources and tests only (tests are type-checked like
+  // source), never dist or generated output, so type-aware lint and the checker don't walk build
+  // artifacts.
+}

@@ -1,0 +1,4 @@
+[dependencies]
+tonic = { workspace = true, features = ["gzip"] }
+# `full` (the default) adds zpages and internal logs; pick the signals and the generated services.
+opentelemetry-proto = { workspace = true, default-features = false, features = ["gen-tonic", "logs", "trace", "metrics"] }

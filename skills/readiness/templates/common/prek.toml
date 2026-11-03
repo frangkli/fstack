@@ -1,0 +1,50 @@
+#:schema https://www.schemastore.org/prek.json
+
+# Only the pre-commit hook is installed (`prek install`, which mise's postinstall runs), and
+# core.hooksPath is never set, so tools that own the other git hooks in .git/hooks keep them.
+
+[[repos]]
+repo = "builtin"
+hooks = [
+    { id = "trailing-whitespace", args = ["--markdown-linebreak-ext=md"] },
+    { id = "end-of-file-fixer" },
+    { id = "mixed-line-ending", args = ["--fix=lf"] },
+    { id = "check-added-large-files" },
+    { id = "check-merge-conflict" },
+    { id = "check-case-conflict" },
+    { id = "check-toml" },
+    { id = "check-yaml" },
+    { id = "check-json" }, # exclude JSONC files such as tsconfig*.json
+    { id = "detect-private-key" },
+
+    # For a repo that will go public: code and config stay publishable, with no personal paths or
+    # private hostnames. Replace <tailnet> with the private network's name, and exclude the folder
+    # that holds private docs, if the repo has one.
+    { id = "deny-pattern", name = "no private hostnames or home paths", args = ['<tailnet>\.ts\.net\b', '/home/[A-Za-z_][A-Za-z0-9._-]*', '/Users/[A-Za-z][^/]*'], exclude = '^<private docs folder>/' },
+
+    # Private docs, where the repo keeps them, follow one of two models; pick one or neither.
+    # (1) A folder deleted before the repo goes public: exclude it above, and nothing else is needed.
+    # (2) An `internal/` folder that stays and is exported without: no file outside it may name it,
+    #     and its changes are committed separately from other changes.
+    # { id = "deny-pattern", name = "no references to internal/", args = ["internal/"], exclude = '^(internal/|prek\.toml$)' },
+]
+
+# (2) continued: commit internal/ changes on their own.
+# [[repos]]
+# repo = "local"
+# hooks = [
+#     { id = "split-internal-commits", name = "commit internal/ separately", language = "system", pass_filenames = false, always_run = true, entry = '''bash -c 'f=$(git diff --cached --name-only); i=$(grep -c ^internal/ <<<"$f"); [ "$i" -eq 0 ] || [ "$i" -eq "$(grep -c . <<<"$f")" ] || { echo "Commit internal/ changes separately from other changes."; exit 1; }' ''' },
+# ]
+
+[[repos]]
+repo = "https://github.com/betterleaks/betterleaks"
+rev = "v1.9.0"
+hooks = [{ id = "betterleaks" }]
+
+[[repos]]
+repo = "https://github.com/crate-ci/typos"
+rev = "v1.51.1"
+hooks = [{ id = "typos" }]
+
+# The language templates add their formatter and lint hooks below, as `language = "system"` hooks
+# that call the repo's own commands.

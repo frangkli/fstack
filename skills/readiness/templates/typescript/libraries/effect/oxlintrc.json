@@ -1,0 +1,48 @@
+// Merge into the Oxlint config of a repo with packages that import `effect`.
+// `"prepare": "effect-tsgo patch --oxlint"` adds the Effect rules as `effecttsgo/<kebab-name>`; the
+// patch supports listed Oxlint and oxlint-tsgolint versions only. The recommended preset has no rule
+// that contradicts STYLE.md, and its 13 errors include missing-return-yield-star,
+// missing-star-in-yield-effect-gen and floating-effect; denyWarnings makes its warnings fail too.
+// The effect-native rules go in an override for Effect packages only: they fire in any file, so
+// outside one they would contradict the vanilla rules (async functions, Error subclasses, env
+// parsing at startup, crypto.randomUUID for security randomness). An override can't extend a
+// preset, so it lists them. Inside an Effect package, the Crypto service (randomUUIDv4) meets the
+// security-randomness rule, since its implementations use the platform's secure APIs; Random is the
+// insecure one (it defaults to Math.random).
+// Bite test: a generator that does `yield* new NotFound(…)` without `return` must fail the gate
+// (missingReturnYieldStar). A repo whose only gate is `vp check` with no effecttsgo/* rules runs none.
+{
+  "extends": ["./node_modules/@effect/tsgo/oxlint-presets/recommended.json"],
+  "overrides": [
+    {
+      "files": ["<effect-package>/src/**"],
+      "rules": {
+        // Effect packages write Array<T> throughout
+        "typescript/array-type": ["error", { "default": "generic" }],
+        // it matches v4's `x.pipe(Effect.catch(…))` at module level by the name `.catch`
+        "unicorn/prefer-top-level-await": "off",
+        "effecttsgo/async-function": "error",
+        "effecttsgo/crypto-random-uuid": "error",
+        "effecttsgo/crypto-random-uuid-in-effect": "error",
+        "effecttsgo/extends-native-error": "error",
+        "effecttsgo/global-console": "error",
+        "effecttsgo/global-console-in-effect": "error",
+        "effecttsgo/global-date": "error",
+        "effecttsgo/global-date-in-effect": "error",
+        "effecttsgo/global-fetch": "error",
+        "effecttsgo/global-fetch-in-effect": "error",
+        "effecttsgo/global-random": "error",
+        "effecttsgo/global-random-in-effect": "error",
+        "effecttsgo/global-timers": "error",
+        "effecttsgo/global-timers-in-effect": "error",
+        "effecttsgo/instance-of-schema": "error",
+        "effecttsgo/new-promise": "error",
+        "effecttsgo/node-builtin-import": "error",
+        "effecttsgo/prefer-schema-over-json": "error",
+        "effecttsgo/process-env": "error",
+        "effecttsgo/process-env-in-effect": "error",
+        "effecttsgo/schema-sync": "error"
+      }
+    }
+  ]
+}

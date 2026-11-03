@@ -1,0 +1,23 @@
+# Beside the root Cargo.toml.
+allow-unwrap-in-tests = true
+# Add the repo's product and protocol names, so doc_markdown doesn't ask for backticks around them.
+doc-valid-idents = ["GraphQL", "PostgreSQL", ".."]   # ".." keeps Clippy's defaults
+
+# Library code takes the time and random values as parameters (STYLE.md Data 6).
+# The few binary call sites that need them carry #[expect(clippy::disallowed_methods, reason = "...")].
+# Code that measures elapsed time (a timeout, a progress bar) belongs in the binary or behind a
+# clock parameter, which is why Instant::now is listed.
+# Add the other ways your dependencies read the clock, randomness or the environment
+# (`rand::random`, `std::env::var`) where library code must not, each with a reason that says
+# what to write instead.
+# allow-invalid: these paths exist only in builds that enable the crate or feature.
+disallowed-methods = [
+    { path = "std::time::SystemTime::now", reason = "take the time as a parameter", allow-invalid = true },
+    { path = "std::time::SystemTime::elapsed", reason = "reads the clock; take the time as a parameter", allow-invalid = true },
+    { path = "std::time::Instant::now", reason = "take the time as a parameter", allow-invalid = true },
+    { path = "tokio::time::Instant::now", reason = "take the time as a parameter", allow-invalid = true },
+    { path = "chrono::Utc::now", reason = "take the time as a parameter", allow-invalid = true },
+    { path = "chrono::Local::now", reason = "take the time as a parameter", allow-invalid = true },
+    { path = "uuid::Uuid::new_v4", reason = "derive ids from content, or generate one at the edge and pass it in", allow-invalid = true },
+    { path = "uuid::Uuid::now_v7", reason = "reads the clock; derive ids from content, or generate one at the edge and pass it in", allow-invalid = true },
+]

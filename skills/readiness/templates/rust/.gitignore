@@ -1,0 +1,7 @@
+# Cargo writes target/ only at the workspace root
+/target/
+# cargo-mutants output
+**/mutants.out*/
+# Snapshots awaiting review (insta)
+*.snap.new
+*.pending-snap

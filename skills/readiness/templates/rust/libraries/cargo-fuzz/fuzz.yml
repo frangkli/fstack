@@ -1,0 +1,57 @@
+# .github/workflows/fuzz.yml: fuzz after changes to the fuzzed code, and on demand.
+name: Fuzz
+
+on:
+  push:
+    branches: [main]
+    # The code the fuzz targets run, how they run, and the lockfile and pins that change it.
+    paths:
+      - .github/workflows/fuzz.yml
+      - .config/mise.toml
+      - justfile
+      - fuzz/**
+      - Cargo.toml
+      - Cargo.lock
+      - <crates the targets call>/**
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [<target>]
+    env:
+      TARGET: ${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@fc42bcc7ddbf51124c30f95a877a0c5168a3bfde # v5.2.1
+      # Dependency updates touch only the workspace's lockfile; fuzz the versions it ships.
+      - name: Take the workspace's dependency versions
+        run: cp Cargo.lock fuzz/Cargo.lock
+      - name: Build
+        run: cargo fuzz build -s none "$TARGET"
+      - name: Fuzz for 15 minutes
+        run: |
+          # Fork mode exits with the last job's code and exits 0 after dropping a seed that
+          # crashes, so a crash artifact decides the result.
+          just fuzz "$TARGET" 900 -fork=3 -timeout=10 || true
+          if compgen -G "fuzz/artifacts/$TARGET/crash-*"; then exit 1; fi
+      - if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fuzz-${{ matrix.target }}
+          path: fuzz/artifacts/${{ matrix.target }}/
+          if-no-files-found: ignore

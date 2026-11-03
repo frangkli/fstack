@@ -1,0 +1,54 @@
+# Rust recipes to merge into the repo's justfile. Keep the repo's own recipes; add these where
+# it lacks one, and list each in AGENTS.md's commands table with what it covers and its time.
+
+set shell := ["bash", "-euo", "pipefail", "-c"]
+
+# Warnings fail locally the same way they fail in CI.
+export CARGO_BUILD_WARNINGS := "deny"
+
+# Everything CI runs for Rust: format, lints, docs, dependency policy, lint inheritance, tests
+# and snapshots. `--locked` fails a stale lockfile; `cargo insta test` can't pass it on, but
+# clippy has already checked it. Integration tests are #[ignore]d and run with `just test-int`.
+rust-check:
+    cargo fmt --all --check
+    cargo clippy --workspace --all-targets --locked
+    RUSTDOCFLAGS="-D warnings" cargo doc --workspace --no-deps --locked
+    cargo deny --locked check
+    cargo metadata --no-deps --format-version 1 --locked | jq -r '.packages[].manifest_path' | while read -r f; do grep -qx 'workspace = true' <(sed -n '/^\[lints\]/,/^\[/p' "$f") || { echo "$f: add [lints] workspace = true"; exit 1; }; done
+    cargo insta test --workspace --test-runner nextest --unreferenced reject --check
+
+# Apply formatter and lint autofixes. Leftover warnings must not block fixes; rust-check denies them.
+fix:
+    CARGO_BUILD_WARNINGS=warn cargo clippy --workspace --all-targets --locked --fix --allow-dirty
+    cargo fmt --all
+
+# Run one crate's tests (`just test <crate>`).
+test crate:
+    cargo nextest run --locked -p "{{crate}}" --no-tests=pass
+
+# Run one crate's integration tests, the ones marked #[ignore = "needs the services"], against
+# the services `services-up` starts. Each worktree uses its own test database.
+test-int crate: services-up
+    cargo nextest run --locked -p "{{crate}}" --run-ignored only --no-tests=pass
+
+# Start the services integration tests need and create this worktree's test database, named
+# from a validated slug that fits the database's name limit (63 bytes for Postgres).
+services-up:
+    @echo "services-up: replace this recipe with the commands that start the repo's services"; exit 1
+
+# Mutants of the diff against `base`: changes no test catches. Run it once per change, before
+# the final review round, and only when the change touches Rust; never in CI, since a run takes
+# minutes. cargo-mutants copies the tree into $TMPDIR, so the run gets its own folder under the
+# git common dir's scratch/, not /tmp, and removes only that folder on exit. Every worktree
+# shares the lock file, so one mutants run happens at a time.
+mutants base="origin/main":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="$(git rev-parse --path-format=absolute --git-common-dir)/scratch"
+    mkdir -p "$root"
+    exec 9>"$root/mutants.lock"
+    if ! flock -n 9; then echo "waiting for another mutants run to finish"; flock 9; fi
+    scratch="$(mktemp -d "$root/mutants.XXXXXX")"
+    trap 'rm -rf "$scratch"' EXIT
+    git diff "{{base}}" > "$scratch/diff.patch"
+    TMPDIR="$scratch" cargo mutants --in-diff "$scratch/diff.patch" --test-tool nextest

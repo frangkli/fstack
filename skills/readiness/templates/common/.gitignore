@@ -1,0 +1,7 @@
+# Local environment and scratch
+.env*
+!.env.example
+mise.local.toml
+.context/
+
+# The language templates add their own lines (build output, snapshot and mutation-testing files).

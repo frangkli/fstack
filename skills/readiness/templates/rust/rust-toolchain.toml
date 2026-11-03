@@ -1,0 +1,6 @@
+# Pin an exact stable release, so every machine and CI build with the same compiler and lints.
+# Bump it on purpose, in a change of its own.
+[toolchain]
+channel = "1.99.1"
+components = ["clippy", "rustfmt"]
+profile = "minimal"

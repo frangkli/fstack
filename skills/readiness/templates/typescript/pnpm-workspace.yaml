@@ -1,0 +1,16 @@
+# Supply-chain guards to merge into pnpm-workspace.yaml.
+# pnpm 11 and later already turn on strictDepBuilds, blockExoticSubdeps, a one-day
+# minimumReleaseAge and frozen-lockfile installs in CI; add only what the defaults leave out.
+# Never turn a default guard off: strictDepBuilds: false, blockExoticSubdeps: false,
+# minimumReleaseAge: 0, dangerouslyAllowAllBuilds, or --no-frozen-lockfile in CI.
+
+# A package whose publisher provenance looks downgraded fails to install.
+trustPolicy: no-downgrade
+
+# One entry per package whose install script the app needs.
+allowBuilds:
+  esbuild: true
+
+# Exceptions to the trust policy, one package each, each with its reason in a comment.
+# trustPolicyExclude:
+#   - <package> # <why its provenance is acceptable>

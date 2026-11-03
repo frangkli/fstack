@@ -1,0 +1,17 @@
+// Merge into the Oxlint config only when the repo uses shadcn/ui (components.json exists).
+// @shadcn/lint loads as a JS plugin and needs Oxlint 1.80 or later.
+// no-restyle: no restyling through className beyond each component's contract (per-component
+// `contracts` say what each may change); no-raw-colors: no palette colours such as bg-pink-500;
+// no-arbitrary-values: no values such as p-[13px]; no-inline-styles; no-unknown-classes: no classes
+// Tailwind can't generate; require-static-classes: no class strings it can't read statically.
+{
+  "jsPlugins": ["@shadcn/lint"],
+  "rules": {
+    "shadcn/no-restyle": ["error", { "allow": ["layout"] }],
+    "shadcn/no-raw-colors": "error",
+    "shadcn/no-arbitrary-values": "error",
+    "shadcn/no-inline-styles": "error",
+    "shadcn/no-unknown-classes": "error",
+    "shadcn/require-static-classes": "error"
+  }
+}

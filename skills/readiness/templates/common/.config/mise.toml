@@ -1,0 +1,11 @@
+# Every pin is exact, so every machine and CI run the same tools. Update a pin on purpose, in its
+# own commit. The language templates add their tools here.
+[tools]
+betterleaks = "1.9.0"
+just = "1.59.0"
+prek = "0.5.5"
+typos = "1.51.1"
+
+[hooks]
+# Arms the pre-commit hook on every `mise install`.
+postinstall = "prek install"

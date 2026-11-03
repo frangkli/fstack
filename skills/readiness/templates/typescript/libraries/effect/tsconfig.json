@@ -1,0 +1,63 @@
+// Merge into the tsconfig of a repo with Effect packages. `@effect/tsgo` (Effect 4, TypeScript 7) or
+// `@effect/language-service` (TypeScript 5) reads this plugin entry. With `effect-tsgo patch` in
+// `prepare`, tsc reports the diagnostics: errors and warnings fail the exit code, suggestions don't
+// (ignoreEffectSuggestionsInTscExitCode defaults to true), so the rules STYLE.md relies on are
+// promoted to error. Suppress one line with
+// `// @effect-diagnostics-next-line <rule>:off -- <why>`; an unused directive is reported as a warning.
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@effect/language-service",
+        "diagnosticSeverity": {
+          "missingReturnYieldStar": "error",
+          "missingStarInYieldEffectGen": "error",
+          "floatingEffect": "error",
+          "outdatedApi": "error",
+          "anyUnknownInErrorContext": "error",
+          "globalErrorInEffectFailure": "error",
+          "globalErrorInEffectCatch": "error",
+          "unknownInEffectCatch": "error",
+          "tryCatchInEffectGen": "error",
+          "unnecessaryFailYieldableError": "error",
+          "schemaSyncInEffect": "error",
+          "preferSchemaOverJson": "error",
+          "schemaUnionOfLiterals": "error",
+          "schemaStructWithTag": "error",
+          "serviceNotAsClass": "error",
+          "runEffectInsideEffect": "error",
+          "effectFnOpportunity": "error",
+          "abortControllerInEffect": "error"
+        },
+        "overrides": [
+          {
+            // Effect packages only: these fire in any file, Effect or not
+            "include": ["<effect-package>/src/**/*.ts"],
+            "options": {
+              "diagnosticSeverity": {
+                "asyncFunction": "error",
+                "extendsNativeError": "error",
+                "newPromise": "error",
+                "nodeBuiltinImport": "error",
+                "processEnv": "error",
+                "processEnvInEffect": "error",
+                "globalDate": "error",
+                "globalDateInEffect": "error",
+                "globalRandom": "error",
+                "globalRandomInEffect": "error",
+                "globalTimers": "error",
+                "globalTimersInEffect": "error",
+                "globalConsole": "error",
+                "globalConsoleInEffect": "error",
+                "globalFetch": "error",
+                "globalFetchInEffect": "error",
+                "cryptoRandomUUID": "error",
+                "cryptoRandomUUIDInEffect": "error"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

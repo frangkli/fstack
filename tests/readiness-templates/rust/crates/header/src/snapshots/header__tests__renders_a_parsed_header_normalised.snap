@@ -1,0 +1,5 @@
+---
+source: crates/header/src/lib.rs
+expression: header.to_string()
+---
+Accept: text/plain
