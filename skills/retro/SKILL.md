@@ -1,7 +1,6 @@
 ---
 name: retro
-description: Evidence-led retrospective of a coding session or workflow, with private records, measured outcomes and proposed environment changes.
-disable-model-invocation: true
+description: Evidence-led retrospective of a coding session or workflow, with private records, measured outcomes and proposed environment changes. Use when asked for a retro, retrospective or post-mortem of a session, run, phase or workflow, or to explain where its time, tokens or review effort went.
 ---
 
 Review the session or workflow the user names. Explain its outcomes, reconstruct where resources went, and propose changes supported by the evidence. Publishing a retrospective does not approve or apply its proposals.
