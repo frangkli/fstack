@@ -6,11 +6,12 @@ Offer these as the recommended option when they fit the repo's stack and nothing
 
 - One `check` command per repo. When the repo mixes languages, a root `justfile` calls each stack's own runner.
 - Every linter, type checker and compiler starts at its strictest setting and is loosened per rule, each with a reason in the config. Examples: oxlint type-aware with type checking and warnings denied, TypeScript `strict`; ruff with all rules plus ty; clippy pedantic with `-D warnings` plus cargo-deny.
-- Per-stack config to offer and merge: TypeScript (tsconfig flags, Oxlint, Effect language service, React UI, pnpm) in [stacks/typescript.md](stacks/typescript.md); Rust (Cargo lints, `clippy.toml`) in [stacks/rust.md](stacks/rust.md).
+- Per-language config to offer and merge: the files under [templates/](templates/) for each language and library the repo uses, as [manifest.md](manifest.md) lists them: TypeScript (tsconfig, Oxlint, pnpm guards, and the React, Effect and shadcn fragments); Rust (Cargo lints, `clippy.toml`, `deny.toml`, `rustfmt.toml`, `rust-toolchain.toml`, nextest, the check, fix and mutants recipes).
 - Unused code and dependencies: knip for TypeScript. Spelling: typos. Workflows: zizmor and actionlint. Secrets: gitleaks or betterleaks.
 - UI projects add accessibility lint and import-boundary rules; published packages add publint and attw.
-- Hooks: Vite+ hooks when the repo uses Vite+, otherwise lefthook (prek in Python-only repos). Fast staged checks and a secret scan on commit; CI is the real gate.
-- Pins: `devEngines` and `.node-version`, `rust-toolchain.toml`, `.python-version`; a release-age cooldown for new dependency versions (pnpm's built-in `minimumReleaseAge`, uv `exclude-newer`).
+- Hooks: prek ([templates/common/prek.toml](templates/common/prek.toml)), installed for `pre-commit` only and armed by the tool manager's post-install step (mise `[hooks] postinstall = "prek install"`). Never set `core.hooksPath`: a manager that does (Vite+ hooks point it at `.vite-hooks/_`) bypasses every hook another tool installed in `.git/hooks`, such as a session recorder's `commit-msg` or `pre-push`. Under Vite+, run `vp hooks disable`. Fast staged checks and a secret scan on commit; CI is the real gate.
+- A repo that will go public: a `deny-pattern` hook rejects home paths, private hostnames and references to the private docs folder from outside it. Where private docs live is the repo's choice: a folder deleted before the repo goes public, or an `internal/` folder that other files may not reference and that is committed separately. Offer both; prescribe neither.
+- Pins: exact tool versions in `.config/mise.toml` ([templates/common/.config/mise.toml](templates/common/.config/mise.toml)), `devEngines` and `.node-version`, `rust-toolchain.toml`, `.python-version`; a release-age cooldown for new dependency versions (pnpm's built-in `minimumReleaseAge`, uv `exclude-newer`).
 
 ## Dev environment
 
@@ -44,8 +45,7 @@ For OBS-1 to OBS-8. Wide events from the first log line; the rest once the app h
 ## Verification and docs
 
 - A `verify` skill made with `verify-create`; browser surfaces driven with agent-browser, with an axe scan and a console check per page.
-- Review rules and Known non-issues in `REVIEW_RULES.md` at the repo root, linked from `AGENTS.md`, with each review bot pointed at it from its dashboard and no bot rules files in the repo (see [agent-docs.md](agent-docs.md)).
-- `STYLE.md` at the repo root from [style-template.md](style-template.md), and each language's never list in a `STYLE.md` beside that language's code, all linked from `AGENTS.md`.
-- Each language's fstack review skill copied into the repo at a pinned fstack commit (see [agent-docs.md](agent-docs.md)).
+- Review rules and Known non-issues in `REVIEW_RULES.md` at the repo root, linked from `AGENTS.md`; a bot that reads only its own rules file gets one that links `REVIEW_RULES.md` and holds no rules (Bugbot: `.cursor/BUGBOT.md`; see [agent-docs.md](agent-docs.md)).
+- `STYLE.md` and `TESTING.md` at the repo root and a style file per language, built from [templates/](templates/) at setup and linked from `AGENTS.md` (see [agent-docs.md](agent-docs.md)); the project owns them after setup.
 - `GLOSSARY.md` at the repo root: each domain term on one line with its meaning in this project, drawn from the code and docs, linked from `AGENTS.md`.
 - React or JSX UIs: readiness flags a missing `PRODUCT.md` and `DESIGN.md` and writes neither. The owner runs `/impeccable init`, which interviews them and writes `PRODUCT.md`; `DESIGN.md` comes from impeccable's document step or its first build.

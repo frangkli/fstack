@@ -2,13 +2,13 @@
 
 Each row is a question the repo passes or fails with evidence. **L** is the level the criterion counts toward; **Scope** is `repo` (scored once) or `app` (scored once per app). "Checker" rows pass only after a bite test ([bite-tests.md](bite-tests.md)).
 
-Speed targets below are defaults. When the repo's `GATES.md` or `AGENTS.md` sets its own, use those and say so.
+Speed targets below are defaults. When the repo's AGENTS.md or `GATES.md` sets its own, use those and say so.
 
 Keep the IDs stable: the next run matches verdicts by ID.
 
 ## Validation
 
-The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is per stack: [stacks/typescript.md](stacks/typescript.md) and [stacks/rust.md](stacks/rust.md).
+The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is the language's lint and compiler config in [templates/](templates/), plus the config fragments of the libraries it uses ([manifest.md](manifest.md)).
 
 | ID | L | Scope | Passes when |
 |---|---|---|---|
@@ -26,7 +26,7 @@ The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is per stack: 
 |---|---|---|---|
 | BLD-1 | 1 | app | The app builds or starts from a documented command in a fresh worktree |
 | BLD-2 | 2 | repo | One command runs every check (lint, types, tests, build) and exits non-zero when any fails |
-| BLD-3 | 2 | repo | `GATES.md` lists each check command with what it covers and how long it takes, and maps the recipe names (`setup`, `teardown`, `check`, `fix`, `test <path>`, `dev`) to their commands; every listed command exists, and each timing is within 2x of a measured run |
+| BLD-3 | 2 | repo | A commands table, in `AGENTS.md` or in `GATES.md`, lists each check command with what it covers and how long it takes, and maps the recipe names (`setup`, `teardown`, `check`, `fix`, `test <path>`, `dev`) to their commands; every listed command exists, and each timing is within 2x of a measured run |
 | BLD-4 | 2 | repo | A lockfile is committed, CI installs from it frozen so a stale lockfile fails the run (`uv sync --locked`: plain `uv sync` re-locks after a `pyproject.toml` change; `--locked` on each cargo command, such as `cargo build --locked`), and the runtime and toolchain versions are pinned in files the tools read |
 | BLD-5 | 3 | repo | `AGENTS.md` or `GATES.md` says to run the cheapest covering check while iterating and the full check only at ship points, and no instruction tells agents to run the full check before every hand-off |
 | BLD-6 | 4 | repo | Checks can run per package or per app, so a unit's check doesn't need the whole repo |
@@ -37,7 +37,7 @@ The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is per stack: 
 |---|---|---|---|
 | TST-1 | 1 | app | Tests exist, run locally from one command with only documented setup, and fail when a tested behaviour is broken |
 | TST-2 | 3 | app | An end-to-end or integration path drives each surface of the app (browser, HTTP, CLI) and runs locally or in CI |
-| TST-3 | 4 | app | A fast subset (`test <path>`: one file or one package) runs in under ~30 s and `GATES.md` names it |
+| TST-3 | 4 | app | A fast subset (`test <path>`: one file or one package) runs in under ~30 s and the commands table names it |
 | TST-4 | 4 | repo | Flaky tests are detected or tracked: retries are reported, a quarantine list exists, or CI history is checked |
 | TST-5 | 3 | app | For a React or JSX UI: component tests render into a DOM environment (happy-dom) and find elements by role or label, so an unnamed control fails a test |
 | TST-6 | 3 | app | For a React or JSX UI: every test suite in the app (browser, visual, end-to-end included) runs in the check command or in CI; each suite that runs in neither is named in the evidence |
@@ -49,14 +49,14 @@ The recommended config for a failing VAL-1, VAL-2, VAL-6 or VAL-7 is per stack: 
 |---|---|---|---|
 | DOC-1 | 1 | repo | A README says what the repo is and how to start it |
 | DOC-2 | 2 | repo | A root `AGENTS.md` exists, under ~60 lines (FAIL above 100), and every command and path in it exists |
-| DOC-3 | 2 | repo | `AGENTS.md` points to `GATES.md`, the `verify` skill and the docs an agent needs, instead of restating config, listing installed skills or holding attribution rules |
+| DOC-3 | 2 | repo | `AGENTS.md` holds the commands table or points to `GATES.md`, points to the `verify` skill and the docs an agent needs, instead of restating config, listing installed skills or holding attribution rules |
 | DOC-4 | 2 | app | The app's own commands are findable from the root `AGENTS.md` or a short `AGENTS.md` in the app folder (nested files only where commands differ) |
-| DOC-5 | 3 | repo | `REVIEW_RULES.md` exists at the repo root and `AGENTS.md` links it, each rule names a concrete failing case, no bot rules file (`.cursor/BUGBOT.md`, `.greptile/`) duplicates it, and every review bot the repo uses reads it (the bot's comments cite it, or the user confirms the dashboard setting) |
+| DOC-5 | 3 | repo | `REVIEW_RULES.md` exists at the repo root and `AGENTS.md` links it, and each rule names a concrete failing case. Every review bot the repo uses reads it: a bot that reads only its own rules file (Bugbot reads `.cursor/BUGBOT.md` and the files it links) has that file, and the file links `REVIEW_RULES.md` and holds no rules of its own; for any other bot, its comments cite the file or the user confirms the setting |
 | DOC-6 | 3 | repo | Both harnesses reach the instructions and project skills: Claude reads `AGENTS.md` (directly, or through a `CLAUDE.md` link or import) and `.claude/skills` resolves to `.agents/skills` |
 | DOC-7 | 3 | repo | `GLOSSARY.md` lists the project's domain terms, one line each, every term appears in the code or docs, and `AGENTS.md` links it |
 | DOC-8 | 3 | app | For a React or JSX UI: `PRODUCT.md` exists, and `DESIGN.md` exists once the UI has a visual system in code |
-| DOC-9 | 3 | repo | A root `STYLE.md` holds the naming, comment and structure rules and an index; each language with a `stacks/` never list carries it in a `STYLE.md` beside its code (the root one in a single-language repo); `AGENTS.md` links the root file and names each language's file |
-| DOC-10 | 3 | repo | Each language with an fstack review skill (`rust`, `typescript`) has a copy of it in `.agents/skills/<lang>/` and `.claude/skills/<lang>/` with fstack's `LICENSE`; `AGENTS.md` names the fstack commit and the refresh rule; each copy, minus `LICENSE`, matches `skills/<lang>/` at that commit (`diff -r` exits 0); and the repo's hooks leave the copies unchanged |
+| DOC-9 | 3 | repo | A root `STYLE.md` holds the shared rules (naming, comments, structure and the other language-agnostic sections) and an index of language → style file → lint config; `AGENTS.md` links it and tells every agent to read the root file and the language's style file before implementing and before any style review, naming both in subagent and review-lane briefs |
+| DOC-10 | 3 | repo | Each language in the index has a style file (beside its code, or the root `STYLE.md` in a single-language repo) and a lint or compiler config, and both exist |
 
 ## Dev environment
 
@@ -121,5 +121,5 @@ N/A for an app that never runs as a process (a library). CLIs count only when th
 | SEC-9 | 4 | repo | The median pull-request CI run over the last 20 finishes in under ~10 min |
 | SEC-10 | 4 | app | For an app that deploys: merging deploys it automatically, and the deploy records the commit it shipped |
 | SEC-11 | 5 | repo | Agents can open, babysit and land a change end to end: every gate is machine-checkable, and the merge rule is written down |
-| SEC-12 | 3 | repo | The package manager's supply-chain guards are on: for pnpm, `pnpm-workspace.yaml` sets `trustPolicy: no-downgrade`, only packages that need build scripts are in `allowBuilds`, and no file turns a default guard off ([stacks/typescript.md](stacks/typescript.md)) |
+| SEC-12 | 3 | repo | The package manager's supply-chain guards are on: for pnpm, `pnpm-workspace.yaml` sets `trustPolicy: no-downgrade`, only packages that need build scripts are in `allowBuilds`, and no file turns a default guard off ([templates/typescript/pnpm-workspace.yaml](templates/typescript/pnpm-workspace.yaml)) |
 | SEC-13 | 3 | repo | Pull-request workflows run without secrets (no secret references in PR-triggered jobs, no `pull_request_target` job that checks out the PR head), and deploy credentials live in a GitHub environment restricted to the default branch |

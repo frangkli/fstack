@@ -21,8 +21,7 @@ PUBLIC = [
     r"^\+(?:async\s+)?def\s+([A-Za-z]\w*)|^\+class\s+([A-Za-z]\w*)",
     r"^\+func\s+(?:\([^)]*\)\s+)?([A-Z]\w*)",
 ]
-RULE_FILES = ["AGENTS.md", "STYLE.md", "REVIEW_RULES.md", "GATES.md", "CONTRIBUTING.md"]
-LANGUAGES = {".ts": "typescript", ".tsx": "typescript", ".rs": "rust", ".py": "python", ".go": "go"}
+RULE_FILES = ["AGENTS.md", "STYLE.md", "TESTING.md", "REVIEW_RULES.md", "GATES.md", "CONTRIBUTING.md"]
 CODE = {".rs", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".py", ".go", ".java", ".kt", ".swift", ".c", ".h", ".cc", ".cpp", ".rb", ".sh"}
 MAX_USES = 15
 
@@ -97,10 +96,6 @@ def main():
     rules = [f"- {f}" for f in RULE_FILES if (root / f).exists()]
     rules += [f"- {d}/STYLE.md" for d in sorted({d for f in files for d in Path(f).parents
                                                  if d != Path(".") and (root / d / "STYLE.md").exists()})]
-    for lang in sorted({LANGUAGES[Path(f).suffix] for f in files if Path(f).suffix in LANGUAGES}):
-        ref = Path(__file__).resolve().parents[2] / lang / "references/review.md"  # a sibling skill
-        if ref.exists():
-            rules.append(f"- {ref} ({lang})")
     parts.append("## Rule files to read\n\n" + ("\n".join(rules) or "none"))
 
     for spec in a.spec:

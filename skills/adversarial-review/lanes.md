@@ -31,7 +31,7 @@ Check that the tests prove the change, and that each test earns its place.
 
 ### Design and style
 
-Its lane name, in the result file and the ledger, is `design-style`. Find what will be costly to change later, and what breaks the repo's conventions. Check the code against the repo's style or conventions documents (every `STYLE.md` the packet lists) and, for each language the change touches, its language skill's `references/review.md` (TypeScript also `references/effect-review.md` in a package that imports `effect`); the packet lists the paths.
+Its lane name, in the result file and the ledger, is `design-style`. Find what will be costly to change later, and what breaks the repo's conventions. Check the code against the repo's style files only: every `STYLE.md` the packet lists, which is the root file and the style file of each language the change touches, plus `TESTING.md` for test code. Read them in full before the diff.
 
 - **Full depth on public interfaces, shared types, contracts and schemas:** names, which module owns the data, what a caller must know to use it, invalid states the types allow, and what a later change would have to break.
 - **Elsewhere, only findings with a concrete cost:** logic in the wrong layer; a duplicate of a helper that already exists; special cases bolted into unrelated flows; wrappers or casts that paper over a mismatched contract; a simpler shape that deletes a layer or a set of conditionals. Rank remedies by how much they delete.

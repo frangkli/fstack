@@ -8,7 +8,7 @@ Steps 7–9, after the user approves the plan. Work within the approved scope; t
 - If the plan has one phase and the harness has a native goal mechanism, set the goal from the done-predicate. Print each check's output in the transcript, since the goal's judge reads only the transcript. With more than one phase, set no goal, and hand over to a fresh session at each phase boundary per `orchestrate`'s Long runs.
 - Hand bounded units (research, implementation, tests, independent review) to subagents through `orchestrate`: one brief and one worktree per unit, a pilot unit before fan-out, phases in the plan's order. Do a unit yourself when briefing it would take longer than doing it.
 - Write code and its tests together, following the design section's conventions. Reuse the repo's helpers, types and modules before adding new ones.
-- After the code works, re-read the diff against the language skill's `references/review.md` (for TypeScript, `typescript/references/review.md`, plus `references/effect-review.md` in Effect code) and fix what it flags.
+- Before writing code, read the repo's root `STYLE.md` and the style file of each language the change touches, and name them in every brief. After the code works, re-read the diff against them and fix what they flag.
 - Prove each failure path the plan lists with a test that drives it: concurrent calls, a retried request, a cancelled operation, a crash mid-way and the recovery.
 - Prove the observability through the repo's test seams: spans parented across the boundaries the plan names, outcomes recorded, label values bounded, secrets and bodies absent from what's exported.
 - Run anything that touches shared state (databases, queues, ports) in the repo's isolated local environments.
