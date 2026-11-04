@@ -62,9 +62,9 @@ Done when every candidate is confirmed (with a trigger and evidence), refuted (w
 
 Sort the verified findings into four buckets:
 
-- **Act on:** confirmed and worth fixing now. A minor belongs here only when its fix changes one line of code (its pin test aside). If this holds more than five items, filter harder or say why.
+- **Act on:** confirmed and in the change's scope, whatever its severity.
 - **Consider:** real, but a judgement call or out of the change's scope.
-- **Noted:** true and minor, or minor and unverifiable.
+- **Noted:** minor or info and unverifiable.
 - **Dismissed:** refuted, hypothetical, a matter of taste ("I would have done it differently"), listed under Known non-issues in `REVIEW_RULES.md`, or about code the change didn't touch. Each with its reason; this list is what lets the reader trust the rest.
 
 Rank a finding higher when two lanes raised it independently. Scrutinise security and data findings harder before dismissing them, not less.

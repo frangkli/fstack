@@ -9,7 +9,7 @@
 Each way a worker can stall is caught where it happens, with no timer:
 - **Finished, failed, stopped on a usage limit, or waiting for input:** the harness wakes you ([SKILL.md](SKILL.md), Long runs).
 - **A hung command:** every long command in a brief runs under `timeout`, so none waits forever.
-- **Going in circles:** a worker whose same check fails twice with the same error stops and reports blocked, which is a finish.
+- **Going in circles:** a worker whose two distinct fix attempts leave the same defect stops and reports blocked, which is a finish.
 - **A process that died with no event:** the only case for the fallback heartbeat. A task that is gone, or `interrupted` or `failed` without a usage limit and no event reached you, counts as a harness drop. Quiet is not dead: a task that is `running` or `waiting` is never a drop, however long since its last activity.
 
 ## Usage limits
