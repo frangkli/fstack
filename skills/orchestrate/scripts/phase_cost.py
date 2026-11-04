@@ -7,6 +7,8 @@ active since <start>. With --cwd, only sessions whose working directory starts w
 one of the prefixes count: pass the run's worktrees, so other threads in the same
 project during the window stay out. A session's usage includes its subagents, and each T3 worker
 thread is its own session. The session-level cost reads 0, so only rows are summed.
+Totals are split by agent (claude, codex, ...), since each bills separately. Rows with no
+list price count their tokens under unpriced_tokens, so a missing price never reads as $0.
 """
 
 import json
@@ -39,32 +41,39 @@ def main():
     project, start = args[0], when(args[1])
     end = when(args[2]) if len(args) == 3 else datetime.now(timezone.utc)
 
-    ids, cursor = [], None
+    ids, cursor = {}, None
     while True:
         page = av("session", "list", "--project", project, "--active-since", start.isoformat(),
                   "--include-one-shot", "--limit", "500", *(["--cursor", cursor] if cursor else []))
-        ids += [s["id"] for s in page["sessions"]
-                if not cwds or any((s.get("cwd") or "") == c or (s.get("cwd") or "").startswith(c + "/") for c in cwds)]
+        ids.update((s["id"], s.get("agent") or "unknown") for s in page["sessions"]
+                   if not cwds or any((s.get("cwd") or "") == c or (s.get("cwd") or "").startswith(c + "/") for c in cwds))
         cursor = page.get("next_cursor") or page.get("cursor")
         if not cursor:
             break
     if not cwds and page.get("total", 0) > len(ids):
         sys.exit(f"AgentsView lists {page['total']} sessions but returned {len(ids)}; narrow the window.")
 
-    total = dict.fromkeys(FIELDS, 0)
-    micro, sessions = 0, 0
-    for sid in ids:
+    by_agent = {}
+    for sid, agent in ids.items():
         rows = [r for r in av("session", "usage", sid).get("breakdown", []) if start <= when(r["timestamp"]) < end]
-        if rows:
-            sessions += 1
+        if not rows:
+            continue
+        t = by_agent.setdefault(agent, {"sessions": 0, **dict.fromkeys(FIELDS, 0), "micro": 0, "unpriced_tokens": 0})
+        t["sessions"] += 1
         for r in rows:
+            tokens = sum(r.get(f) or 0 for f in FIELDS)
             for f in FIELDS:
-                total[f] += r.get(f) or 0
-            micro += (r.get("cost") or {}).get("microdollars") or 0
+                t[f] += r.get(f) or 0
+            if r.get("has_cost"):
+                t["micro"] += (r.get("cost") or {}).get("microdollars") or 0
+            else:
+                t["unpriced_tokens"] += tokens
+    for t in by_agent.values():
+        t["total_tokens"] = sum(t[f] for f in FIELDS)
+        t["list_price_usd"] = round(t.pop("micro") / 1e6, 2)
 
     print(json.dumps({
-        "project": project, "start": start.isoformat(), "end": end.isoformat(), "sessions": sessions,
-        **total, "total_tokens": sum(total.values()), "list_price_usd": round(micro / 1e6, 2),
+        "project": project, "start": start.isoformat(), "end": end.isoformat(), "by_agent": by_agent,
     }, indent=2))
 
 

@@ -51,7 +51,7 @@ Run open-code-review on the same base and head. ocr takes one background file, a
 timeout 900 ocr review --from <base> --to <head> --background-file <state>/round-<n>/ocr-background.md --format json --audience agent > <state>/round-<n>/raw/ocr.json
 ```
 
-As soon as it finishes, read it and write its findings in the lane result format to `<state>/round-<n>/ocr.json`; an unread result is a gap. Exit code 0 doesn't prove coverage. `ocr review --preview` with the same refs lists the files ocr's rules select; changed files it leaves out (typically tests and docs) are excluded by design, so note them, since the test-integrity lane covers tests. A previewed file missing from the output's `coverage.completed`, or listed under `failed`, wasn't reviewed, and the lane reports it as a partial gap by name. If `ocr` isn't installed, can't reach its model (`ocr llm test` fails) or lacks credentials, record the lane as BLOCKED, which makes it a gap.
+As soon as it finishes, read it and write its findings in the lane result format to `<state>/round-<n>/ocr.json`, with the model the output names (`llm.model`) as the lane's model, not the one you meant to run; an unread result is a gap. Exit code 0 doesn't prove coverage. `ocr review --preview` with the same refs lists the files ocr's rules select; changed files it leaves out (typically tests and docs) are excluded by design, so note them, since the test-integrity lane covers tests. A previewed file missing from the output's `coverage.completed`, or listed under `failed`, wasn't reviewed, and the lane reports it as a partial gap by name. If `ocr` isn't installed, can't reach its model (`ocr llm test` fails) or lacks credentials, record the lane as BLOCKED, which makes it a gap.
 
 ### Codex
 

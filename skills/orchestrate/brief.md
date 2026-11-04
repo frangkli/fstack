@@ -18,6 +18,8 @@ ACCEPTANCE    Numbered pass/fail criteria from the ticket. Each test names what 
 VERIFY        The ticket CHECK: `<command>` → `<expected>`, plus the cheapest check from the commands table in AGENTS.md (or GATES.md where a repo has one)
               that covers the change. Each new test fails before the change. Known gotchas.
 EXIT          The checkable predicate that means done. Never relax it; report blocked instead.
+              Every command it needs has finished with a recorded exit code before you report;
+              a started or subscribed-to command is not a result.
 FORBIDDEN     Push, merge, force-push and PRs; you integrate. Rebasing anything but your own save points.
               Edits outside SCOPE (report them as follow-ups). Changing a test, snapshot or threshold
               without reporting it first. The full readiness check (you run it once on the integrated head).
@@ -33,7 +35,7 @@ STANDING      <standing-orders.md, pasted verbatim>
 
 Close every brief with these lines:
 
-> Deliver the complete unit, with no placeholders, TODOs or deferred remainder. Every long command runs under `timeout`; the same check failing twice with the same error means stop and report blocked with both attempts. Fold your save points into real commits once EXIT holds. Where the ticket and the code disagree, keep to the GOAL and record the mismatch under DEVIATIONS.
+> Deliver the complete unit, with no placeholders, TODOs or deferred remainder. Every long command runs under `timeout`; two distinct fix attempts that leave the same defect mean stop and report blocked with both attempts; an expected red test or an unfinished fixture is not an attempt. Fold your save points into real commits once EXIT holds. Where the ticket and the code disagree, keep to the GOAL and record the mismatch under DEVIATIONS.
 
 ## Report block
 
